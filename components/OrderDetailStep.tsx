@@ -1,13 +1,15 @@
 "use client";
 
+import React from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Package, ChevronLeft, RefreshCw, CheckCircle, Calendar, Clock } from "lucide-react";
+import { Package, ChevronLeft, RefreshCw, CheckCircle, Calendar, Clock, ChevronDown, ChevronUp } from "lucide-react";
 import type { InvoiceData } from "@/types/invoice";
-import { formatCurrency, formatAmount } from "@/lib/format";
+import { formatCurrency } from "@/lib/format";
+import { useState } from "react";
 
 interface OrderDetailStepProps {
 	invoiceData: InvoiceData;
@@ -20,6 +22,7 @@ export default function OrderDetailStep({ invoiceData, loading, onBack, onAccept
 	const dateObject = new Date(invoiceData.invoiceDate);
 	const formattedDate = dateObject.toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" });
 	const formattedTime = dateObject.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: true }).toLowerCase();
+	const [itemsExpanded, setItemsExpanded] = useState(true);
 	return (
 		<div className="space-y-4 pb-32">
 			<div className="flex items-center justify-between">
@@ -66,51 +69,64 @@ export default function OrderDetailStep({ invoiceData, loading, onBack, onAccept
 
 			<Card>
 				<CardHeader className="pb-0">
-					<CardTitle className="text-lg flex items-center gap-2 ">
-						<Package className="w-5 h-5" />
-						Order Items ({invoiceData.items.length})
-					</CardTitle>
+					<div className="flex items-center justify-between">
+						<CardTitle className="text-lg flex items-center gap-2 ">
+							<Package className="w-5 h-5" />
+							Order Items ({invoiceData.items.length})
+						</CardTitle>
+						<Button
+							variant="ghost"
+							size="icon"
+							aria-label={itemsExpanded ? "Collapse items" : "Expand items"}
+							onClick={() => setItemsExpanded((v) => !v)}
+							className="shrink-0"
+						>
+							{itemsExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+						</Button>
+					</div>
 				</CardHeader>
-				<CardContent className="pt-0">
-					{invoiceData.items.map((item, index) => (
-						<div key={item.id} className={index === 0 ? "pt-0 pb-4" : "py-4"}>
-							<div className="flex items-start gap-3">
-								<Image
-									src={item.imageUrl || "/placeholder.jpg"}
-									alt={item.name}
-									width={35}
-									height={35}
-									className="rounded-md border bg-muted shrink-0"
-								/>
-								<div className="min-w-0 flex-1">
-									<p className="text-sm font-semibold leading-snug truncate">{item.name}</p>
-									<div className="mt-1">
-										<Badge variant="secondary" className="text-[13px]">
-											{formatCurrency(item.lineTotal)}
-										</Badge>
-									</div>
-									<div className="mt-2 flex items-center gap-7 text-xs">
-										<div className="flex items-center gap-1.5">
-											<span className="text-muted-foreground">SKU</span>
-											<span className="font-bold text-primary">{item.sku}</span>
+				{itemsExpanded && (
+					<CardContent className="pt-0">
+						{invoiceData.items.map((item, index) => (
+							<div key={item.id} className={index === 0 ? "pt-0 pb-4" : "py-4"}>
+								<div className="flex items-start gap-3">
+									<Image
+										src={item.imageUrl || "/placeholder.jpg"}
+										alt={item.name}
+										width={35}
+										height={35}
+										className="rounded-md border bg-muted shrink-0"
+									/>cls
+									<div className="min-w-0 flex-1">
+										<p className="text-sm font-semibold leading-snug truncate">{item.name}</p>
+										<div className="mt-1">
+											<Badge variant="secondary" className="text-[13px]">
+												{formatCurrency(item.lineTotal)}
+											</Badge>
 										</div>
-										<div className="flex items-center gap-1.5">
-											<span className="text-muted-foreground">Unit</span>
-											<span className="font-medium">{formatCurrency(item.unitPrice)}</span>
-										</div>
-										<div className="flex items-center gap-1.5">
-											<span className="text-muted-foreground">Qty</span>
-											<span className="font-medium">{item.quantity}</span>
+										<div className="mt-2 flex items-center gap-7 text-xs">
+											<div className="flex items-center gap-1.5">
+												<span className="text-muted-foreground">SKU</span>
+												<span className="font-bold text-primary">{item.sku}</span>
+											</div>
+											<div className="flex items-center gap-1.5">
+												<span className="text-muted-foreground">Unit</span>
+												<span className="font-medium">{formatCurrency(item.unitPrice)}</span>
+											</div>
+											<div className="flex items-center gap-1.5">
+												<span className="text-muted-foreground">Qty</span>
+												<span className="font-medium">{item.quantity}</span>
+											</div>
 										</div>
 									</div>
 								</div>
+								{index < invoiceData.items.length - 1 && (
+									<Separator className="mx-0 my-2 h-[1.5px] bg-gradient-to-r from-transparent via-border/70 to-transparent rounded-full" />
+								)}
 							</div>
-							{index < invoiceData.items.length - 1 && (
-								<Separator className="mx-0 my-2 h-[1.5px] bg-gradient-to-r from-transparent via-border/70 to-transparent rounded-full" />
-							)}
-						</div>
-					))}
-				</CardContent>
+						))}
+					</CardContent>
+				)}
 			</Card>
 
 			<Card>

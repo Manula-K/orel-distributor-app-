@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import OtpStep from "@/components/OtpStep";
 
-export default function OtpPage() {
+function OtpPageContent() {
 	const router = useRouter();
 	const params = useSearchParams();
 	const phoneFromQuery = params.get("phone");
@@ -79,5 +79,13 @@ export default function OtpPage() {
 				/>
 			</div>
 		</div>
+	);
+}
+
+export default function OtpPage() {
+	return (
+		<Suspense fallback={<div className="min-h-screen flex items-center justify-center text-sm text-muted-foreground">Loading…</div>}>
+			<OtpPageContent />
+		</Suspense>
 	);
 }
