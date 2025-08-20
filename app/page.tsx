@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { CheckCircle, Phone, Shield, Receipt, Clock, RefreshCw, PartyPopper, Package, ChevronLeft, Filter, ChevronRight, LogOut } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import Image from "next/image";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 
 type AppStep = "phone" | "otp" | "orders" | "orderDetail" | "success";
@@ -66,7 +67,7 @@ export default function OrelDistributorApp() {
 	const orderHistory: InvoiceData[] = [
 		{
 			invoiceNumber: "INV-2025-001234",
-			distributorName: "ABC Electronics Distributors",
+			distributorName: "ABC Electronics Distributors ",
 			invoiceDate: "2025-01-15",
 			month: "January 2025",
 			period: "Period 02",
@@ -323,6 +324,18 @@ export default function OrelDistributorApp() {
 		return `LKR ${amount.toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
 	};
 
+	const formatFriendlyDateTime = (iso: string) => {
+		const d = new Date(iso);
+		return d.toLocaleString("en-GB", {
+			day: "2-digit",
+			month: "long",
+			year: "numeric",
+			hour: "2-digit",
+			minute: "2-digit",
+			hour12: true,
+		});
+	};
+
 	const handleOtpChange = (index: number, value: string) => {
 		if (value.length > 1) return;
 
@@ -379,15 +392,15 @@ export default function OrelDistributorApp() {
 
 				{currentStep === "phone" && (
 					<Card>
-						<CardHeader className="text-center">
-							<div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+						<CardHeader className="text-center ">
+							<div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
 								<Phone className="w-6 h-6 text-primary" />
 							</div>
 							<CardTitle>Enter Phone Number</CardTitle>
 							<CardDescription>We'll send you a verification code</CardDescription>
 						</CardHeader>
-						<CardContent className="space-y-4">
-							<div className="space-y-2">
+						<CardContent className="pt-0 space-y-3">
+							<div className="">
 								<Label htmlFor="phone">Phone Number</Label>
 								<Input
 									id="phone"
@@ -423,14 +436,14 @@ export default function OrelDistributorApp() {
 
 				{currentStep === "otp" && (
 					<Card>
-						<CardHeader className="text-center">
+						<CardHeader className="text-center pb-2">
 							<div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
 								<Shield className="w-6 h-6 text-primary" />
 							</div>
 							<CardTitle>Verify OTP</CardTitle>
 							<CardDescription>Enter the 4-digit code sent to {phoneNumber}</CardDescription>
 						</CardHeader>
-						<CardContent className="space-y-4">
+						<CardContent className="pt-0 space-y-4">
 							<div className="space-y-2">
 								<Label>Verification Code</Label>
 								<div className="flex justify-center space-x-3">
@@ -490,67 +503,50 @@ export default function OrelDistributorApp() {
 
 				{currentStep === "orders" && (
 					<div className="space-y-4">
-						<div className="text-center">
-							<h2 className="text-xl font-bold">Your Orders</h2>
-							<p className="text-sm text-muted-foreground">Manage and view your order history</p>
+						<div className="flex items-center justify-between">
+							<div className="flex items-center gap-3">
+								<Image src="/logo1.png" alt="Orel Logo" width={70} height={70} priority />
+								<div className="text-left">
+									<h2 className="text-xl font-bold">Distributor Portal</h2>
+									<p className="text-sm text-muted-foreground">Manage and view your orders</p>
+								</div>
+							</div>
+							<Button aria-label="Logout" variant="ghost" size="sm" className="gap-2" onClick={logout}>
+								<LogOut className="h-4 w-4" />
+								Logout
+							</Button>
 						</div>
 
 						{distributor && (
-							<Card className="gap-3">
-								<CardHeader>
-									<div className="flex items-center justify-between">
-										<div>
-											<CardTitle className="text-base">{distributor.name}</CardTitle>
-											<CardDescription>Logged in</CardDescription>
-										</div>
-										<Tooltip>
-											<TooltipTrigger asChild>
-												<Button aria-label="Logout" variant="ghost" size="sm" className="gap-2" onClick={logout}>
-													<LogOut className="h-4 w-4" />
-													Logout
-												</Button>
-											</TooltipTrigger>
-											<TooltipContent>Logout</TooltipContent>
-										</Tooltip>
-									</div>
+							<Card className="gap-0">
+								<CardHeader className="pb-1">
+									<CardTitle className="text-base">{distributor.name}</CardTitle>
 								</CardHeader>
-								<CardContent>
-									<div className="flex items-center gap-4">
-										<Avatar className="h-10 w-10">
-											<AvatarImage src="/placeholder-user.jpg" alt={distributor.name} />
-											<AvatarFallback>
-												{distributor.name
-													.split(" ")
-													.map((n) => n[0])
-													.join("")
-													.slice(0, 2)}
-											</AvatarFallback>
-										</Avatar>
-										<div>
-											<p className="font-medium text-sm">{distributor.contactPerson}</p>
-											<p className="text-xs text-muted-foreground">Primary Contact</p>
-										</div>
-									</div>
-									<Accordion type="single" collapsible className="mt-1">
+								<CardContent className="pt-0">
+									<Accordion type="single" collapsible>
 										<AccordionItem value="dist-details">
-											<AccordionTrigger className="px-0">View details</AccordionTrigger>
+											<AccordionTrigger className="px-0 py-1 text-sm">View more details</AccordionTrigger>
 											<AccordionContent className="px-0">
-												<div className="grid grid-cols-2 gap-4 text-sm pt-2">
-													<div>
-														<p className="text-muted-foreground">Distributor Code</p>
+												<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+													<div className="rounded-lg bg-muted/30 p-3">
+														<p className="text-[11px] text-muted-foreground">Distributor Code</p>
 														<p className="font-mono font-medium">{distributor.code}</p>
 													</div>
-													<div>
-														<p className="text-muted-foreground">Region</p>
+													<div className="rounded-lg bg-muted/30 p-3">
+														<p className="text-[11px] text-muted-foreground">Region</p>
 														<p className="font-medium">{distributor.region}</p>
 													</div>
-													<div>
-														<p className="text-muted-foreground">Email</p>
-														<p className="font-medium break-all">{distributor.email}</p>
+													<div className="rounded-lg bg-muted/30 p-3">
+														<p className="text-[11px] text-muted-foreground">Email</p>
+														<a href={`mailto:${distributor.email}`} className="font-medium break-all text-primary hover:underline">
+															{distributor.email}
+														</a>
 													</div>
-													<div>
-														<p className="text-muted-foreground">Phone</p>
-														<p className="font-medium">{distributor.phone}</p>
+													<div className="rounded-lg bg-muted/30 p-3">
+														<p className="text-[11px] text-muted-foreground">Phone</p>
+														<a href={`tel:${distributor.phone.replace(/\s+/g, "")}`} className="font-medium text-primary hover:underline">
+															{distributor.phone}
+														</a>
 													</div>
 												</div>
 											</AccordionContent>
@@ -610,18 +606,21 @@ export default function OrelDistributorApp() {
 								<Card
 									key={order.invoiceNumber}
 									className={`cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02] ${
-										order.status === "current" ? "border-primary bg-primary/5" : "hover:border-primary/50"
+										order.status === "current" ? "border-red-500/30 bg-red-50/30" : "hover:border-primary/50"
 									}`}
 									onClick={() => viewOrderDetail(order)}
 								>
-									<CardContent className="p-4">
-										<div className="flex items-center justify-between mb-3">
-											<div className="flex items-center gap-2">
-												<Badge variant={order.status === "current" ? "default" : "secondary"} className="text-xs">
+									<CardContent>
+										<div className="flex items-center justify-between mb-1.5">
+											<div className="flex items-center gap-1.5">
+												<Badge
+													variant={order.status === "current" ? "default" : "outline"}
+													className={`text-[10px] h-5 px-2 ${order.status === "current" ? "" : "text-green-600 border-green-600"}`}
+												>
 													{order.status === "current" ? "Current Order" : "Completed"}
 												</Badge>
 												{order.status === "current" && (
-													<Badge variant="outline" className="text-xs text-green-600 border-green-600">
+													<Badge variant="outline" className="text-[10px] h-5 px-2 text-red-600 border-red-600">
 														Action Required
 													</Badge>
 												)}
@@ -629,29 +628,14 @@ export default function OrelDistributorApp() {
 											<ChevronRight className="w-4 h-4 text-muted-foreground" />
 										</div>
 
-										<div className="space-y-2">
-											<div className="flex justify-between items-start">
-												<div className="space-y-1">
-													<p className="font-semibold text-sm">{order.invoiceNumber}</p>
-													<p className="text-xs text-muted-foreground">
-														{order.invoiceDate} • {order.period}
-													</p>
-												</div>
-												<div className="text-right">
-													<p className="font-bold text-lg">{formatCurrency(order.orderTotal)}</p>
-													<p className="text-xs text-muted-foreground">{order.items.length} items</p>
-												</div>
+										<div className="flex items-end justify-between">
+											<div className="space-y-0.5">
+												<p className="font-semibold text-[13px] leading-tight">{order.invoiceNumber}</p>
+												<p className="text-[11px] text-muted-foreground">{formatFriendlyDateTime(order.invoiceDate)}</p>
 											</div>
-
-											<div className="pt-2 border-t">
-												<p className="text-xs text-muted-foreground mb-1">Items Preview:</p>
-												<p className="text-sm font-medium truncate">
-													{order.items
-														.slice(0, 2)
-														.map((item) => item.name)
-														.join(", ")}
-													{order.items.length > 2 && ` +${order.items.length - 2} more`}
-												</p>
+											<div className="text-right">
+												<p className="font-bold text-base leading-tight">{formatCurrency(order.orderTotal)}</p>
+												<p className="text-[11px] text-muted-foreground">{order.items.length} items</p>
 											</div>
 										</div>
 									</CardContent>
@@ -663,7 +647,7 @@ export default function OrelDistributorApp() {
 							<Card>
 								<CardContent className="text-center py-8">
 									<Package className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-									<p className="text-muted-foreground">No orders found for the selected period</p>
+									<p className="text-muted-foreground">No orders found</p>
 								</CardContent>
 							</Card>
 						)}
@@ -710,7 +694,7 @@ export default function OrelDistributorApp() {
 									</div>
 									<div className="flex justify-between">
 										<span className="text-muted-foreground">Order Date:</span>
-										<span className="font-medium">{invoiceData.invoiceDate}</span>
+										<span className="font-medium">{formatFriendlyDateTime(invoiceData.invoiceDate)}</span>
 									</div>
 								</div>
 							</CardContent>
