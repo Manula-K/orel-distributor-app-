@@ -670,32 +670,26 @@ export default function OrelDistributorApp() {
 							<CardHeader className="pb-4">
 								<div className="flex items-center justify-between">
 									<div className="flex items-center space-x-3">
-										<div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-											<Receipt className="w-5 h-5 text-primary" />
-										</div>
+										<Image src="/logo1.png" alt="Orel Logo" width={36} height={36} />
 										<div>
-											<CardTitle className="text-lg">Order Details</CardTitle>
-											<CardDescription>
-												{invoiceData.month} • {invoiceData.period}
-											</CardDescription>
+											<CardTitle className="text-lg">{invoiceData.invoiceNumber}</CardTitle>
+											<CardDescription>{invoiceData.distributorName}</CardDescription>
 										</div>
 									</div>
 								</div>
 							</CardHeader>
 							<CardContent className="space-y-4">
-								<div className="grid grid-cols-1 gap-3 text-sm">
-									<div className="flex justify-between">
-										<span className="text-muted-foreground">Invoice Number:</span>
-										<span className="font-mono font-medium">{invoiceData.invoiceNumber}</span>
-									</div>
-									<div className="flex justify-between">
-										<span className="text-muted-foreground">Distributor:</span>
-										<span className="font-medium text-right">{invoiceData.distributorName}</span>
-									</div>
-									<div className="flex justify-between">
-										<span className="text-muted-foreground">Order Date:</span>
-										<span className="font-medium">{formatFriendlyDateTime(invoiceData.invoiceDate)}</span>
-									</div>
+								<div className="flex items-center justify-between text-sm">
+									<span className="text-muted-foreground">Date & Time</span>
+									<span className="font-medium">{formatFriendlyDateTime(invoiceData.invoiceDate)}</span>
+								</div>
+								<div className="flex items-center justify-between text-sm">
+									<span className="text-muted-foreground">Status</span>
+									{invoiceData.status === "current" ? (
+										<span className="text-red-600 font-medium">Current Order</span>
+									) : (
+										<span className="text-green-600 font-medium">Completed</span>
+									)}
 								</div>
 							</CardContent>
 						</Card>
