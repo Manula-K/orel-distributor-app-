@@ -101,7 +101,7 @@ export default function OrderDetailStep({ invoiceData, loading, onBack, onAccept
 										<div className="flex items-center justify-between gap-2">
 											<div className="flex flex-col items-start gap-1 min-w-0">
 												<p className="text-sm font-semibold leading-snug truncate">{item.sku}</p>
-												<Badge variant="secondary" className="text-[9px]">
+												<Badge variant="secondary" className="text-[10px]">
 													{item.name}
 												</Badge>
 											</div>
@@ -109,7 +109,7 @@ export default function OrderDetailStep({ invoiceData, loading, onBack, onAccept
 												Qty {item.quantity}
 											</Badge>
 										</div>
-										<div className="mt-2 flex items-center justify-between gap-6 text-[9px]">
+										<div className="mt-2 flex items-center justify-between gap-4 text-[10px]">
 											<div className="flex items-center gap-1.5">
 												<span className="text-muted-foreground ">Unit Price</span>
 												<span className="font-bold text-primary">{formatCurrency(item.unitPrice)}</span>
