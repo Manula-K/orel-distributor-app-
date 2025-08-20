@@ -45,7 +45,7 @@ export default function OrderDetailStep({ invoiceData, loading, onBack, onAccept
 				<CardContent className="space-y-4">
 					<div className="flex items-center justify-between text-sm">
 						<span className="text-muted-foreground">Date/Time</span>
-						<div className="flex items-center gap-3">
+						<div className="flex items-center gap-3 text-[11px]">
 							<span className="flex items-center gap-1">
 								<Calendar className="w-4 h-4 text-muted-foreground" />
 								<span className="font-medium">{formattedDate}</span>
