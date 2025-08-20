@@ -1,53 +1,17 @@
 "use client";
 
 import type React from "react";
-
-import { useState, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
-import { CheckCircle, Phone, Shield, Receipt, Clock, RefreshCw, PartyPopper, Package, ChevronLeft, Filter, ChevronRight, LogOut } from "lucide-react";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import Image from "next/image";
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+import { useEffect, useRef, useState } from "react";
+import PhoneStep from "@/components/steps/PhoneStep";
+import OtpStep from "@/components/steps/OtpStep";
+import OrdersStep from "@/components/steps/OrdersStep";
+import OrderDetailStep from "@/components/steps/OrderDetailStep";
+import SuccessStep from "@/components/steps/SuccessStep";
+import { normalizeSriLankaPhone } from "@/lib/format";
+import { ORDER_HISTORY, MOCK_DISTRIBUTOR } from "@/lib/mock-data";
+import type { DistributorProfile, InvoiceData } from "@/types/invoice";
 
 type AppStep = "phone" | "otp" | "orders" | "orderDetail" | "success";
-
-interface InvoiceItem {
-	id: string;
-	sku: string;
-	name: string;
-	quantity: number;
-	unitPrice: number;
-	lineTotal: number;
-}
-
-interface InvoiceData {
-	invoiceNumber: string;
-	distributorName: string;
-	invoiceDate: string;
-	month: string;
-	period: string;
-	items: InvoiceItem[];
-	subtotal: number;
-	totalDiscount: number;
-	orderTotal: number;
-	status: "current" | "completed";
-}
-
-interface DistributorProfile {
-	name: string;
-	code: string;
-	region: string;
-	contactPerson: string;
-	email: string;
-	phone: string;
-}
 
 export default function OrelDistributorApp() {
 	const [currentStep, setCurrentStep] = useState<AppStep>("phone");
@@ -62,155 +26,9 @@ export default function OrelDistributorApp() {
 	const [selectedYear, setSelectedYear] = useState("all");
 	const [distributor, setDistributor] = useState<DistributorProfile | null>(null);
 
-	const otpRefs = [useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null)];
+	// local refs managed within OtpStep after refactor
 
-	const orderHistory: InvoiceData[] = [
-		{
-			invoiceNumber: "INV-2025-001234",
-			distributorName: "ABC Electronics Distributors ",
-			invoiceDate: "2025-01-15",
-			month: "January 2025",
-			period: "Period 02",
-			status: "current",
-			items: [
-				{
-					id: "1",
-					sku: "MCB-1P-06A",
-					name: "SIGMA MCB 1POLE 06A Type C - 6kA",
-					quantity: 50,
-					unitPrice: 2850.0,
-					lineTotal: 125400.0,
-				},
-				{
-					id: "2",
-					sku: "LED-07W-DL",
-					name: "LED BULB SCREW TYPE 07W D/L",
-					quantity: 200,
-					unitPrice: 1940.0,
-					lineTotal: 348400.0,
-				},
-				{
-					id: "3",
-					sku: "SW-2W-WH",
-					name: "SWITCH 2 WAY WHITE",
-					quantity: 100,
-					unitPrice: 1025.0,
-					lineTotal: 97275.0,
-				},
-			],
-			subtotal: 571075.0,
-			totalDiscount: 171322.5,
-			orderTotal: 399752.5,
-		},
-		{
-			invoiceNumber: "INV-2024-001198",
-			distributorName: "ABC Electronics Distributors",
-			invoiceDate: "2024-12-28",
-			month: "December 2024",
-			period: "Period 26",
-			status: "completed",
-			items: [
-				{
-					id: "4",
-					sku: "CBL-2.5MM",
-					name: "CABLE 2.5MM COPPER WIRE",
-					quantity: 500,
-					unitPrice: 285.0,
-					lineTotal: 131525.0,
-				},
-				{
-					id: "5",
-					sku: "PLG-3P-13A",
-					name: "PLUG 3 PIN 13A",
-					quantity: 75,
-					unitPrice: 1480.0,
-					lineTotal: 99825.0,
-				},
-			],
-			subtotal: 231350.0,
-			totalDiscount: 69405.0,
-			orderTotal: 161945.0,
-		},
-		{
-			invoiceNumber: "INV-2024-001156",
-			distributorName: "ABC Electronics Distributors",
-			invoiceDate: "2024-12-15",
-			month: "December 2024",
-			period: "Period 25",
-			status: "completed",
-			items: [
-				{
-					id: "6",
-					sku: "FAN-52IN-WH",
-					name: "CEILING FAN 52 INCH WHITE",
-					quantity: 25,
-					unitPrice: 8500.0,
-					lineTotal: 212500.0,
-				},
-				{
-					id: "7",
-					sku: "TUB-40W-WH",
-					name: "LED TUBE LIGHT 40W WHITE",
-					quantity: 150,
-					unitPrice: 2200.0,
-					lineTotal: 330000.0,
-				},
-			],
-			subtotal: 542500.0,
-			totalDiscount: 162750.0,
-			orderTotal: 379750.0,
-		},
-		{
-			invoiceNumber: "INV-2024-001089",
-			distributorName: "ABC Electronics Distributors",
-			invoiceDate: "2024-11-20",
-			month: "November 2024",
-			period: "Period 21",
-			status: "completed",
-			items: [
-				{
-					id: "8",
-					sku: "SOC-2P-13A",
-					name: "SOCKET 2 PIN 13A",
-					quantity: 120,
-					unitPrice: 950.0,
-					lineTotal: 114000.0,
-				},
-				{
-					id: "9",
-					sku: "WIR-1.5MM",
-					name: "WIRE 1.5MM SINGLE CORE",
-					quantity: 1000,
-					unitPrice: 125.0,
-					lineTotal: 125000.0,
-				},
-			],
-			subtotal: 239000.0,
-			totalDiscount: 71700.0,
-			orderTotal: 167300.0,
-		},
-		{
-			invoiceNumber: "INV-2024-001045",
-			distributorName: "ABC Electronics Distributors",
-			invoiceDate: "2024-11-08",
-			month: "November 2024",
-			period: "Period 20",
-			status: "completed",
-			items: [
-				{
-					id: "10",
-					sku: "EXT-3M-WH",
-					name: "EXTENSION CORD 3 METER WHITE",
-					quantity: 80,
-					unitPrice: 1850.0,
-					lineTotal: 148000.0,
-				},
-			],
-			subtotal: 148000.0,
-			totalDiscount: 44400.0,
-			orderTotal: 103600.0,
-		},
-	];
+	const orderHistory: InvoiceData[] = ORDER_HISTORY;
 
 	const filteredOrders = orderHistory.filter((order) => {
 		const orderYear = order.month.split(" ")[1];
@@ -233,7 +51,6 @@ export default function OrelDistributorApp() {
 		}
 	}, [countdown]);
 
-	// Ensure selected month remains valid when changing year
 	useEffect(() => {
 		if (selectedYear === "all") return;
 		const availableMonths = new Set(orderHistory.filter((o) => o.month.split(" ")[1] === selectedYear).map((o) => o.month.split(" ")[0]));
@@ -241,15 +58,6 @@ export default function OrelDistributorApp() {
 			setSelectedMonth("all");
 		}
 	}, [selectedYear]);
-
-	const MOCK_DISTRIBUTOR: DistributorProfile = {
-		name: "ABC Electronics Distributors",
-		code: "DIST-01234",
-		region: "Western Province",
-		contactPerson: "Kasun Perera",
-		email: "kasun.perera@abcdistributors.lk",
-		phone: "+94 77 123 4567",
-	};
 
 	const sendOTP = async () => {
 		setLoading(true);
@@ -320,39 +128,15 @@ export default function OrelDistributorApp() {
 		setCurrentStep("orderDetail");
 	};
 
-	const formatCurrency = (amount: number) => {
-		return `LKR ${amount.toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
-	};
-
-	const formatFriendlyDateTime = (iso: string) => {
-		const d = new Date(iso);
-		return d.toLocaleString("en-GB", {
-			day: "2-digit",
-			month: "long",
-			year: "numeric",
-			hour: "2-digit",
-			minute: "2-digit",
-			hour12: true,
-		});
-	};
-
 	const handleOtpChange = (index: number, value: string) => {
 		if (value.length > 1) return;
 
 		const newOtp = [...otp];
 		newOtp[index] = value;
 		setOtp(newOtp);
-
-		if (value && index < 3) {
-			otpRefs[index + 1].current?.focus();
-		}
 	};
 
-	const handleOtpKeyDown = (index: number, e: React.KeyboardEvent) => {
-		if (e.key === "Backspace" && !otp[index] && index > 0) {
-			otpRefs[index - 1].current?.focus();
-		}
-	};
+	const handleOtpKeyDown = (index: number, e: React.KeyboardEvent) => {};
 
 	const logout = () => {
 		setCurrentStep("phone");
@@ -367,465 +151,67 @@ export default function OrelDistributorApp() {
 		setSelectedMonth("all");
 	};
 
-	// Always enforce Sri Lankan format: "+94" followed by up to 9 digits.
-	const normalizeSriLankaPhone = (rawInput: string) => {
-		const digitsOnly = rawInput.replace(/\D/g, "");
-		let nationalPart = "";
-		if (digitsOnly.startsWith("94")) {
-			nationalPart = digitsOnly.slice(2);
-		} else if (digitsOnly.startsWith("0")) {
-			nationalPart = digitsOnly.slice(1);
-		} else {
-			nationalPart = digitsOnly;
-		}
-		nationalPart = nationalPart.slice(0, 9);
-		return "+94" + nationalPart;
-	};
-
 	return (
 		<div className={`min-h-screen bg-background ${currentStep === "phone" || currentStep === "otp" ? "flex items-center justify-center" : ""}`}>
 			<div className={`w-full max-w-md mx-auto px-4 ${currentStep === "phone" || currentStep === "otp" ? "space-y-6" : "py-6 space-y-6"}`}>
-				{/* <div className="text-center space-y-2">
-					<h1 className="text-2xl font-bold text-foreground">Orel Corporation</h1>
-					<p className="text-sm text-muted-foreground">Distributor Portal</p>
-				</div> */}
-
 				{currentStep === "phone" && (
-					<Card>
-						<CardHeader className="text-center ">
-							<div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-								<Phone className="w-6 h-6 text-primary" />
-							</div>
-							<CardTitle>Enter Phone Number</CardTitle>
-							<CardDescription>We'll send you a verification code</CardDescription>
-						</CardHeader>
-						<CardContent className="pt-0 space-y-3">
-							<div className="">
-								<Label htmlFor="phone">Phone Number</Label>
-								<Input
-									id="phone"
-									type="tel"
-									inputMode="numeric"
-									placeholder="+94771234567"
-									value={phoneNumber}
-									onChange={(e) => setPhoneNumber(normalizeSriLankaPhone(e.target.value))}
-									maxLength={12}
-									className="text-lg"
-								/>
-							</div>
-
-							{error && (
-								<Alert variant="destructive">
-									<AlertDescription>{error}</AlertDescription>
-								</Alert>
-							)}
-
-							<Button onClick={sendOTP} disabled={loading || phoneNumber.length < 12} className="w-full" size="lg">
-								{loading ? (
-									<>
-										<RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-										Sending OTP...
-									</>
-								) : (
-									"Send OTP"
-								)}
-							</Button>
-						</CardContent>
-					</Card>
+					<PhoneStep
+						phoneNumber={phoneNumber}
+						onPhoneChange={(value) => setPhoneNumber(normalizeSriLankaPhone(value))}
+						error={error}
+						loading={loading}
+						onSendOTP={sendOTP}
+					/>
 				)}
 
 				{currentStep === "otp" && (
-					<Card>
-						<CardHeader className="text-center pb-2">
-							<div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-								<Shield className="w-6 h-6 text-primary" />
-							</div>
-							<CardTitle>Verify OTP</CardTitle>
-							<CardDescription>Enter the 4-digit code sent to {phoneNumber}</CardDescription>
-						</CardHeader>
-						<CardContent className="pt-0 space-y-4">
-							<div className="space-y-2">
-								<Label>Verification Code</Label>
-								<div className="flex justify-center space-x-3">
-									{otp.map((digit, index) => (
-										<Input
-											key={index}
-											ref={otpRefs[index]}
-											type="text"
-											inputMode="numeric"
-											maxLength={1}
-											value={digit}
-											onChange={(e) => handleOtpChange(index, e.target.value.replace(/\D/g, ""))}
-											onKeyDown={(e) => handleOtpKeyDown(index, e)}
-											className="w-12 h-12 text-center text-xl font-bold"
-										/>
-									))}
-								</div>
-							</div>
-
-							{error && (
-								<Alert variant="destructive">
-									<AlertDescription>{error}</AlertDescription>
-								</Alert>
-							)}
-
-							<div className="flex items-center justify-between text-sm">
-								<span className="text-muted-foreground">Attempts: {otpAttempts}/3</span>
-								{countdown > 0 ? (
-									<div className="flex items-center text-muted-foreground">
-										<Clock className="w-4 h-4 mr-1" />
-										{countdown}s
-									</div>
-								) : (
-									<Button variant="link" size="sm" onClick={resendOTP}>
-										Resend OTP
-									</Button>
-								)}
-							</div>
-
-							<Button onClick={verifyOTP} disabled={loading || otp.join("").length !== 4} className="w-full" size="lg">
-								{loading ? (
-									<>
-										<RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-										Verifying...
-									</>
-								) : (
-									"Verify OTP"
-								)}
-							</Button>
-
-							<Button variant="outline" onClick={() => setCurrentStep("phone")} className="w-full">
-								Back to Phone Number
-							</Button>
-						</CardContent>
-					</Card>
+					<OtpStep
+						phoneNumber={phoneNumber}
+						otp={otp}
+						error={error}
+						loading={loading}
+						otpAttempts={otpAttempts}
+						countdown={countdown}
+						onVerify={verifyOTP}
+						onResend={resendOTP}
+						onBack={() => setCurrentStep("phone")}
+						onOtpChange={(index, value) => handleOtpChange(index, value)}
+					/>
 				)}
 
 				{currentStep === "orders" && (
-					<div className="space-y-4">
-						<div className="flex items-center justify-between">
-							<div className="flex items-center gap-3">
-								<Image src="/logo1.png" alt="Orel Logo" width={70} height={70} priority />
-								<div className="text-left">
-									<h2 className="text-xl font-bold">Distributor Portal</h2>
-									<p className="text-sm text-muted-foreground">Manage and view your orders</p>
-								</div>
-							</div>
-							<Button aria-label="Logout" variant="ghost" size="sm" className="gap-2" onClick={logout}>
-								<LogOut className="h-4 w-4" />
-								Logout
-							</Button>
-						</div>
-
-						{distributor && (
-							<Card className="gap-0">
-								<CardHeader className="pb-1">
-									<CardTitle className="text-base">{distributor.name}</CardTitle>
-								</CardHeader>
-								<CardContent className="pt-0">
-									<Accordion type="single" collapsible>
-										<AccordionItem value="dist-details">
-											<AccordionTrigger className="px-0 py-1 text-sm">View more details</AccordionTrigger>
-											<AccordionContent className="px-0">
-												<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-													<div className="rounded-lg bg-muted/30 p-3">
-														<p className="text-[11px] text-muted-foreground">Distributor Code</p>
-														<p className="font-mono font-medium">{distributor.code}</p>
-													</div>
-													<div className="rounded-lg bg-muted/30 p-3">
-														<p className="text-[11px] text-muted-foreground">Region</p>
-														<p className="font-medium">{distributor.region}</p>
-													</div>
-													<div className="rounded-lg bg-muted/30 p-3">
-														<p className="text-[11px] text-muted-foreground">Email</p>
-														<a href={`mailto:${distributor.email}`} className="font-medium break-all text-primary hover:underline">
-															{distributor.email}
-														</a>
-													</div>
-													<div className="rounded-lg bg-muted/30 p-3">
-														<p className="text-[11px] text-muted-foreground">Phone</p>
-														<a href={`tel:${distributor.phone.replace(/\s+/g, "")}`} className="font-medium text-primary hover:underline">
-															{distributor.phone}
-														</a>
-													</div>
-												</div>
-											</AccordionContent>
-										</AccordionItem>
-									</Accordion>
-								</CardContent>
-							</Card>
-						)}
-
-						<Card className="gap-3">
-							<CardHeader>
-								<CardTitle className="text-sm flex items-center gap-2">
-									<Filter className="w-4 h-4" />
-									Filter Orders
-								</CardTitle>
-							</CardHeader>
-							<CardContent className="pt-0 space-y-3">
-								<div className="flex flex-wrap items-end gap-3">
-									<div className="flex-1 min-w-[7rem]">
-										<Label className="text-[11px] font-medium text-muted-foreground mb-1 block">Filter by Year</Label>
-										<Select value={selectedYear} onValueChange={(v) => setSelectedYear(v)}>
-											<SelectTrigger size="sm" className="w-full min-w-[7rem]">
-												<SelectValue placeholder="Year" />
-											</SelectTrigger>
-											<SelectContent>
-												<SelectItem value="all">All Years</SelectItem>
-												{uniqueYears.map((year) => (
-													<SelectItem key={year} value={year}>
-														{year}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
-									</div>
-									<div className="flex-1 min-w-[8.5rem]">
-										<Label className="text-[11px] font-medium text-muted-foreground mb-1 block">Filter by Month</Label>
-										<Select value={selectedMonth} onValueChange={(v) => setSelectedMonth(v)}>
-											<SelectTrigger size="sm" className="w-full min-w-[8.5rem]">
-												<SelectValue placeholder="Month" />
-											</SelectTrigger>
-											<SelectContent>
-												<SelectItem value="all">All Months</SelectItem>
-												{uniqueMonthNames.map((monthName) => (
-													<SelectItem key={monthName} value={monthName}>
-														{monthName}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
-									</div>
-								</div>
-							</CardContent>
-						</Card>
-
-						<div className="space-y-3">
-							{filteredOrders.map((order) => (
-								<Card
-									key={order.invoiceNumber}
-									className={`cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02] ${
-										order.status === "current" ? "border-red-500/30 bg-red-50/30" : "hover:border-primary/50"
-									}`}
-									onClick={() => viewOrderDetail(order)}
-								>
-									<CardContent>
-										<div className="flex items-center justify-between mb-1.5">
-											<div className="flex items-center gap-1.5">
-												<Badge
-													variant={order.status === "current" ? "default" : "outline"}
-													className={`text-[10px] h-5 px-2 ${order.status === "current" ? "" : "text-green-600 border-green-600"}`}
-												>
-													{order.status === "current" ? "Current Order" : "Completed"}
-												</Badge>
-												{order.status === "current" && (
-													<Badge variant="outline" className="text-[10px] h-5 px-2 text-red-600 border-red-600">
-														Action Required
-													</Badge>
-												)}
-											</div>
-											<ChevronRight className="w-4 h-4 text-muted-foreground" />
-										</div>
-
-										<div className="flex items-end justify-between">
-											<div className="space-y-0.5">
-												<p className="font-semibold text-[13px] leading-tight">{order.invoiceNumber}</p>
-												<p className="text-[11px] text-muted-foreground">{formatFriendlyDateTime(order.invoiceDate)}</p>
-											</div>
-											<div className="text-right">
-												<p className="font-bold text-base leading-tight">{formatCurrency(order.orderTotal)}</p>
-												<p className="text-[11px] text-muted-foreground">{order.items.length} items</p>
-											</div>
-										</div>
-									</CardContent>
-								</Card>
-							))}
-						</div>
-
-						{filteredOrders.length === 0 && (
-							<Card>
-								<CardContent className="text-center py-8">
-									<Package className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-									<p className="text-muted-foreground">No orders found</p>
-								</CardContent>
-							</Card>
-						)}
-					</div>
+					<OrdersStep
+						distributor={distributor}
+						selectedYear={selectedYear}
+						setSelectedYear={(v) => setSelectedYear(v)}
+						selectedMonth={selectedMonth}
+						setSelectedMonth={(v) => setSelectedMonth(v)}
+						uniqueYears={uniqueYears}
+						uniqueMonthNames={uniqueMonthNames}
+						filteredOrders={filteredOrders}
+						onViewOrderDetail={viewOrderDetail}
+						onLogout={logout}
+					/>
 				)}
 
 				{currentStep === "orderDetail" && invoiceData && (
-					<div className="space-y-4 pb-32">
-						<div className="flex items-center justify-between">
-							<Button variant="ghost" size="sm" onClick={() => setCurrentStep("orders")} className="flex items-center gap-2">
-								<ChevronLeft className="w-4 h-4" />
-								Back to Orders
-							</Button>
-							<Badge variant={invoiceData.status === "current" ? "default" : "secondary"}>
-								{invoiceData.status === "current" ? "Current Order" : "Completed"}
-							</Badge>
-						</div>
-
-						<Card>
-							<CardHeader className="pb-4">
-								<div className="flex items-center justify-between">
-									<div className="flex items-center space-x-3">
-										<Image src="/logo1.png" alt="Orel Logo" width={36} height={36} />
-										<div>
-											<CardTitle className="text-lg">{invoiceData.invoiceNumber}</CardTitle>
-											<CardDescription>{invoiceData.distributorName}</CardDescription>
-										</div>
-									</div>
-								</div>
-							</CardHeader>
-							<CardContent className="space-y-4">
-								<div className="flex items-center justify-between text-sm">
-									<span className="text-muted-foreground">Date & Time</span>
-									<span className="font-medium">{formatFriendlyDateTime(invoiceData.invoiceDate)}</span>
-								</div>
-								<div className="flex items-center justify-between text-sm">
-									<span className="text-muted-foreground">Status</span>
-									{invoiceData.status === "current" ? (
-										<span className="text-red-600 font-medium">Current Order</span>
-									) : (
-										<span className="text-green-600 font-medium">Completed</span>
-									)}
-								</div>
-							</CardContent>
-						</Card>
-
-						<Card>
-							<CardHeader className="pb-3">
-								<CardTitle className="text-lg flex items-center gap-2">
-									<Package className="w-5 h-5" />
-									Order Items ({invoiceData.items.length})
-								</CardTitle>
-							</CardHeader>
-							<CardContent className="p-0">
-								<div className="divide-y">
-									{invoiceData.items.map((item, index) => (
-										<div key={item.id} className="p-4">
-											<div className="space-y-3">
-												{/* Item name gets full width at top */}
-												<div className="w-full">
-													<h3 className="font-semibold text-sm leading-tight break-words hyphens-auto text-foreground">{item.name}</h3>
-													<div className="flex items-center gap-2 mt-1">
-														<Badge variant="outline" className="text-xs font-mono px-2 py-0.5">
-															{item.sku}
-														</Badge>
-													</div>
-												</div>
-
-												{/* Compact pricing grid */}
-												<div className="grid grid-cols-3 gap-3 text-center bg-muted/20 rounded-md p-3">
-													<div>
-														<p className="text-xs text-muted-foreground font-medium">Unit Price</p>
-														<p className="font-bold text-sm mt-0.5">{formatCurrency(item.unitPrice)}</p>
-													</div>
-													<div>
-														<p className="text-xs text-muted-foreground font-medium">Qty</p>
-														<p className="font-bold text-sm mt-0.5">{item.quantity.toLocaleString()}</p>
-													</div>
-													<div>
-														<p className="text-xs text-muted-foreground font-medium">Line Total</p>
-														<p className="font-bold text-sm text-primary mt-0.5">{formatCurrency(item.lineTotal)}</p>
-													</div>
-												</div>
-											</div>
-										</div>
-									))}
-								</div>
-							</CardContent>
-						</Card>
-
-						<Card>
-							<CardContent className="pt-6">
-								<div className="space-y-4">
-									<div className="flex justify-between text-base">
-										<span className="text-muted-foreground">Subtotal</span>
-										<span className="font-medium">{formatCurrency(invoiceData.subtotal)}</span>
-									</div>
-									<div className="flex justify-between text-base">
-										<span className="text-muted-foreground">Discount (30%)</span>
-										<span className="text-green-600 font-medium">-{formatCurrency(invoiceData.totalDiscount)}</span>
-									</div>
-									<div className="border-t pt-4">
-										<div className="flex justify-between text-xl font-bold">
-											<span>Order Total</span>
-											<span className="text-primary">{formatCurrency(invoiceData.orderTotal)}</span>
-										</div>
-									</div>
-								</div>
-							</CardContent>
-						</Card>
-
-						{invoiceData.status === "current" && (
-							<div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background via-background/95 to-transparent">
-								<div className="max-w-md mx-auto">
-									<Button
-										onClick={acceptOrder}
-										disabled={loading}
-										className="w-full px-8 py-4 h-auto text-base font-bold bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-xl hover:shadow-green-500/25 transition-all duration-300 rounded-xl"
-									>
-										{loading ? (
-											<>
-												<RefreshCw className="w-5 h-5 mr-3 animate-spin" />
-												Processing Order...
-											</>
-										) : (
-											<>
-												<CheckCircle className="w-5 h-5 mr-3" />
-												Accept Order
-											</>
-										)}
-									</Button>
-								</div>
-							</div>
-						)}
-					</div>
+					<OrderDetailStep invoiceData={invoiceData} loading={loading} onBack={() => setCurrentStep("orders")} onAcceptOrder={acceptOrder} />
 				)}
 
 				{currentStep === "success" && (
-					<Card className="text-center">
-						<CardContent className="pt-8 pb-8">
-							<div className="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
-								<PartyPopper className="w-10 h-10 text-green-600" />
-							</div>
-							<CardTitle className="text-2xl font-bold text-green-600 mb-2">Order Accepted!</CardTitle>
-							<CardDescription className="text-base mb-6">
-								Your order has been successfully processed and will be prepared for delivery.
-							</CardDescription>
-							<div className="space-y-3 text-sm text-muted-foreground mb-8">
-								<p>
-									Invoice: <span className="font-medium text-foreground">{invoiceData?.invoiceNumber}</span>
-								</p>
-								<p>
-									Total: <span className="font-bold text-lg text-foreground">{invoiceData && formatCurrency(invoiceData.orderTotal)}</span>
-								</p>
-							</div>
-							<div className="space-y-3">
-								<Button onClick={() => setCurrentStep("orders")} className="w-full" size="lg">
-									Back to Orders
-								</Button>
-								<Button
-									onClick={() => {
-										setCurrentStep("phone");
-										setPhoneNumber("+94");
-										setOtp(["", "", "", ""]);
-										setInvoiceData(null);
-										setError("");
-										setOtpAttempts(0);
-										setCountdown(0);
-									}}
-									variant="outline"
-									className="w-full"
-									size="lg"
-								>
-									Process New Order
-								</Button>
-							</div>
-						</CardContent>
-					</Card>
+					<SuccessStep
+						invoiceData={invoiceData}
+						onBackToOrders={() => setCurrentStep("orders")}
+						onProcessNew={() => {
+							setCurrentStep("phone");
+							setPhoneNumber("+94");
+							setOtp(["", "", "", ""]);
+							setInvoiceData(null);
+							setError("");
+							setOtpAttempts(0);
+							setCountdown(0);
+						}}
+					/>
 				)}
 			</div>
 		</div>
