@@ -40,11 +40,11 @@ export default function OrdersStep({
 	const router = useRouter();
 	return (
 		<div className="space-y-4">
-			<div className="flex items-center justify-between">
+			<div className="flex flex-wrap items-center justify-between gap-2">
 				<div className="flex items-center gap-3">
-					<Image src="/logo1.png" alt="Orel Logo" width={70} height={70} priority />
+					<Image src="/logo1.png" alt="Orel Logo" width={60} height={60} priority />
 					<div className="text-left">
-						<h2 className="text-xl font-bold">Distributor Portal</h2>
+						<h2 className="text-lg font-bold">Distributor Portal</h2>
 						<p className="text-sm text-muted-foreground">Manage your orders</p>
 					</div>
 				</div>

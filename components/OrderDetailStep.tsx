@@ -44,7 +44,7 @@ export default function OrderDetailStep({ invoiceData, loading, onBack, onAccept
 				</CardHeader>
 				<CardContent className="space-y-4">
 					<div className="flex items-center justify-between text-sm">
-						<span className="text-muted-foreground">Date & Time</span>
+						<span className="text-muted-foreground">Date/Time</span>
 						<div className="flex items-center gap-3">
 							<span className="flex items-center gap-1">
 								<Calendar className="w-4 h-4 text-muted-foreground" />
@@ -96,7 +96,7 @@ export default function OrderDetailStep({ invoiceData, loading, onBack, onAccept
 										width={35}
 										height={35}
 										className="rounded-md border bg-muted shrink-0"
-									/>cls
+									/>
 									<div className="min-w-0 flex-1">
 										<p className="text-sm font-semibold leading-snug truncate">{item.name}</p>
 										<div className="mt-1">
@@ -104,9 +104,9 @@ export default function OrderDetailStep({ invoiceData, loading, onBack, onAccept
 												{formatCurrency(item.lineTotal)}
 											</Badge>
 										</div>
-										<div className="mt-2 flex items-center gap-7 text-xs">
+										<div className="mt-2 flex items-center gap-4 text-[10px]">
 											<div className="flex items-center gap-1.5">
-												<span className="text-muted-foreground">SKU</span>
+												<span className="text-muted-foreground ">SKU</span>
 												<span className="font-bold text-primary">{item.sku}</span>
 											</div>
 											<div className="flex items-center gap-1.5">
