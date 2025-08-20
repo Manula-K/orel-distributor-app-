@@ -98,24 +98,26 @@ export default function OrderDetailStep({ invoiceData, loading, onBack, onAccept
 										className="rounded-md border bg-muted shrink-0"
 									/>
 									<div className="min-w-0 flex-1">
-										<p className="text-sm font-semibold leading-snug truncate">{item.name}</p>
-										<div className="mt-1">
-											<Badge variant="secondary" className="text-[13px]">
-												{formatCurrency(item.lineTotal)}
+										<div className="flex items-center justify-between gap-2">
+											<div className="flex flex-col items-start gap-1 min-w-0">
+												<p className="text-sm font-semibold leading-snug truncate">{item.sku}</p>
+												<Badge variant="secondary" className="text-[9px]">
+													{item.name}
+												</Badge>
+											</div>
+											<Badge variant="outline" className="text-[10px] shrink-0">
+												Qty {item.quantity}
 											</Badge>
 										</div>
-										<div className="mt-2 flex items-center gap-4 text-[10px]">
+										<div className="mt-2 flex items-center justify-between gap-6 text-[9px]">
 											<div className="flex items-center gap-1.5">
-												<span className="text-muted-foreground ">SKU</span>
-												<span className="font-bold text-primary">{item.sku}</span>
+												<span className="text-muted-foreground ">Unit Price</span>
+												<span className="font-bold text-primary">{formatCurrency(item.unitPrice)}</span>
 											</div>
+
 											<div className="flex items-center gap-1.5">
-												<span className="text-muted-foreground">Unit</span>
-												<span className="font-medium">{formatCurrency(item.unitPrice)}</span>
-											</div>
-											<div className="flex items-center gap-1.5">
-												<span className="text-muted-foreground">Qty</span>
-												<span className="font-medium">{item.quantity}</span>
+												<span className="text-muted-foreground">Total</span>
+												<span className="font-medium">{formatCurrency(item.lineTotal)}</span>
 											</div>
 										</div>
 									</div>
