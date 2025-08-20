@@ -7,9 +7,10 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ChevronRight, Filter, LogOut, Package } from "lucide-react";
+import { ChevronRight, Filter, LogOut, Package, Calendar, Clock } from "lucide-react";
 import type { DistributorProfile, InvoiceData } from "@/types/invoice";
-import { formatCurrency, formatFriendlyDateTime } from "@/lib/format";
+import { formatCurrency } from "@/lib/format";
+import { useRouter } from "next/navigation";
 
 interface OrdersStepProps {
 	distributor: DistributorProfile | null;
@@ -36,6 +37,7 @@ export default function OrdersStep({
 	onViewOrderDetail,
 	onLogout,
 }: OrdersStepProps) {
+	const router = useRouter();
 	return (
 		<div className="space-y-4">
 			<div className="flex items-center justify-between">
@@ -137,45 +139,59 @@ export default function OrdersStep({
 			</Card>
 
 			<div className="space-y-3">
-				{filteredOrders.map((order) => (
-					<Card
-						key={order.invoiceNumber}
-						className={`cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02] ${
-							order.status === "current" ? "border-red-500/30 bg-red-50/30" : "hover:border-primary/50"
-						}`}
-						onClick={() => onViewOrderDetail(order)}
-					>
-						<CardContent>
-							<div className="flex items-center justify-between mb-1.5">
-								<div className="flex items-center gap-1.5">
-									<Badge
-										variant={order.status === "current" ? "default" : "outline"}
-										className={`text-[10px] h-5 px-2 ${order.status === "current" ? "" : "text-green-600 border-green-600"}`}
-									>
-										{order.status === "current" ? "Current Order" : "Completed"}
-									</Badge>
-									{order.status === "current" && (
-										<Badge variant="outline" className="text-[10px] h-5 px-2 text-red-600 border-red-600">
-											Action Required
+				{filteredOrders.map((order) => {
+					const dateObject = new Date(order.invoiceDate);
+					const formattedDate = dateObject.toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" });
+					const formattedTime = dateObject.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: true }).toLowerCase();
+					return (
+						<Card
+							key={order.invoiceNumber}
+							className={`cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02] ${
+								order.status === "current" ? "border-red-500/30 bg-red-50/30" : "hover:border-primary/50"
+							}`}
+							onClick={() => router.push(`/${encodeURIComponent(order.invoiceNumber)}`)}
+						>
+							<CardContent>
+								<div className="flex items-center justify-between mb-1.5">
+									<div className="flex items-center gap-1.5">
+										<Badge
+											variant={order.status === "current" ? "default" : "outline"}
+											className={`text-[10px] h-5 px-2 ${order.status === "current" ? "" : "text-green-600 border-green-600"}`}
+										>
+											{order.status === "current" ? "Current Order" : "Completed"}
 										</Badge>
-									)}
+										{order.status === "current" && (
+											<Badge variant="outline" className="text-[10px] h-5 px-2 text-red-600 border-red-600">
+												Action Required
+											</Badge>
+										)}
+									</div>
+									<ChevronRight className="w-4 h-4 text-muted-foreground" />
 								</div>
-								<ChevronRight className="w-4 h-4 text-muted-foreground" />
-							</div>
 
-							<div className="flex items-end justify-between">
-								<div className="space-y-0.5">
-									<p className="font-semibold text-[13px] leading-tight">{order.invoiceNumber}</p>
-									<p className="text-[11px] text-muted-foreground">{formatFriendlyDateTime(order.invoiceDate)}</p>
+								<div className="flex items-end justify-between">
+									<div className="space-y-0.5">
+										<p className="font-semibold text-[13px] leading-tight">{order.invoiceNumber}</p>
+										<div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+											<span className="flex items-center gap-1">
+												<Calendar className="w-3.5 h-3.5" />
+												<span>{formattedDate}</span>
+											</span>
+											<span className="flex items-center gap-1">
+												<Clock className="w-3.5 h-3.5" />
+												<span>{formattedTime}</span>
+											</span>
+										</div>
+									</div>
+									<div className="text-right">
+										<p className="font-bold text-base leading-tight">{formatCurrency(order.orderTotal)}</p>
+										<p className="text-[11px] text-muted-foreground">{order.items.length} items</p>
+									</div>
 								</div>
-								<div className="text-right">
-									<p className="font-bold text-base leading-tight">{formatCurrency(order.orderTotal)}</p>
-									<p className="text-[11px] text-muted-foreground">{order.items.length} items</p>
-								</div>
-							</div>
-						</CardContent>
-					</Card>
-				))}
+							</CardContent>
+						</Card>
+					);
+				})}
 			</div>
 
 			{filteredOrders.length === 0 && (

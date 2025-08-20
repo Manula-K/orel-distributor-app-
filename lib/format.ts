@@ -2,6 +2,12 @@ export const formatCurrency = (amount: number) => {
 	return `LKR ${amount.toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
 };
 
+// Format a numeric amount without currency prefix, with fixed 2 decimals and
+// thousands separators. Suitable for table cells where currency is shown in headers.
+export const formatAmount = (amount: number) => {
+	return amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+};
+
 export const formatFriendlyDateTime = (iso: string) => {
 	const d = new Date(iso);
 	return d.toLocaleString("en-GB", {

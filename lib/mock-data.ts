@@ -24,7 +24,7 @@ export const ORDER_HISTORY: InvoiceData[] = [
 				name: "SIGMA MCB 1POLE 06A Type C - 6kA",
 				quantity: 50,
 				unitPrice: 2850.0,
-				lineTotal: 125400.0,
+				lineTotal: 12540000.0,
 			},
 			{
 				id: "2",
@@ -32,7 +32,7 @@ export const ORDER_HISTORY: InvoiceData[] = [
 				name: "LED BULB SCREW TYPE 07W D/L",
 				quantity: 200,
 				unitPrice: 1940.0,
-				lineTotal: 348400.0,
+				lineTotal: 34840000.0,
 			},
 			{
 				id: "3",
@@ -40,7 +40,7 @@ export const ORDER_HISTORY: InvoiceData[] = [
 				name: "SWITCH 2 WAY WHITE",
 				quantity: 100,
 				unitPrice: 1025.0,
-				lineTotal: 97275.0,
+				lineTotal: 97270005.0,
 			},
 		],
 		subtotal: 571075.0,

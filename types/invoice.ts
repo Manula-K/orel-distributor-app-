@@ -2,6 +2,7 @@ export interface InvoiceItem {
 	id: string;
 	sku: string;
 	name: string;
+	imageUrl?: string;
 	quantity: number;
 	unitPrice: number;
 	lineTotal: number;
