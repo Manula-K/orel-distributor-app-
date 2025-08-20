@@ -45,7 +45,7 @@ export default function OrdersStep({
 					<Image src="/logo1.png" alt="Orel Logo" width={70} height={70} priority />
 					<div className="text-left">
 						<h2 className="text-xl font-bold">Distributor Portal</h2>
-						<p className="text-sm text-muted-foreground">Manage and view your orders</p>
+						<p className="text-sm text-muted-foreground">Manage your orders</p>
 					</div>
 				</div>
 				<Button aria-label="Logout" variant="ghost" size="sm" className="gap-2" onClick={onLogout}>
@@ -184,7 +184,7 @@ export default function OrdersStep({
 										</div>
 									</div>
 									<div className="text-right">
-										<p className="font-bold text-base leading-tight">{formatCurrency(order.orderTotal)}</p>
+										<p className="font-bold text-sm leading-tight">{formatCurrency(order.orderTotal)}</p>
 										<p className="text-[11px] text-muted-foreground">{order.items.length} items</p>
 									</div>
 								</div>
