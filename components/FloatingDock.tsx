@@ -1,21 +1,26 @@
 "use client";
 
-import { Home, ShoppingCart, Settings } from "lucide-react";
+import { Home, Package, ShoppingCart, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useCart } from "@/contexts/CartContext";
 
 const dockItems = [
 	{ icon: Home, label: "Home", href: "/" },
-	{ icon: ShoppingCart, label: "Place Order", href: "/place-order" },
+	{ icon: Package, label: "Products", href: "/products" },
+	{ icon: ShoppingCart, label: "Cart", href: "/cart" },
 	{ icon: Settings, label: "Settings", href: "/settings" },
 ];
 
 export function FloatingDock() {
 	const pathname = usePathname();
 	const [scrolled, setScrolled] = useState(false);
+	const { getTotalItems } = useCart();
+	const cartItemCount = getTotalItems();
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -37,8 +42,10 @@ export function FloatingDock() {
 			>
 				{dockItems.map((item) => {
 					const isActive = pathname === item.href;
+					const isCart = item.href === "/cart";
+
 					return (
-						<div key={item.href} className="flex flex-col items-center">
+						<div key={item.href} className="flex flex-col items-center relative">
 							<Link href={item.href}>
 								<Button
 									variant={isActive ? "default" : "ghost"}
@@ -50,6 +57,14 @@ export function FloatingDock() {
 									title={item.label}
 								>
 									<item.icon className="h-5 w-5" />
+									{isCart && cartItemCount > 0 && (
+										<Badge
+											variant="destructive"
+											className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs flex items-center justify-center"
+										>
+											{cartItemCount > 99 ? "99+" : cartItemCount}
+										</Badge>
+									)}
 								</Button>
 							</Link>
 							<span className={cn("mt-1 text-[10px] leading-none", isActive ? "text-foreground" : "text-muted-foreground")}>{item.label}</span>

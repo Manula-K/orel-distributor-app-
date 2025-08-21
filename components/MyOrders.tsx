@@ -130,7 +130,7 @@ export default function MyOrders({
 															variant={order.status === "current" ? "default" : "outline"}
 															className={`text-[10px] h-5 px-2 ${order.status === "current" ? "" : "text-green-600 border-green-600"}`}
 														>
-															{order.status === "current" ? "Current Order" : "Completed"}
+															{order.status === "current" ? "Replenish Order" : "Completed"}
 														</Badge>
 														{order.status === "current" && (
 															<Badge variant="outline" className="text-[10px] h-5 px-2 text-red-600 border-red-600">

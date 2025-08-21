@@ -145,7 +145,7 @@ export default function OrderDetails({ invoiceData, loading, onBack, onAcceptOrd
 											variant={isCurrentOrder ? "default" : "outline"}
 											className={`text-[10px] h-5 px-2 ${isCurrentOrder ? "" : "text-green-600 border-green-600"}`}
 										>
-											{isCurrentOrder ? "Current Order" : "Completed"}
+											{isCurrentOrder ? "Replenish Order" : "Completed"}
 										</Badge>
 									</div>
 								</div>
