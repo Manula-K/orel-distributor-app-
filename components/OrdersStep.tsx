@@ -46,7 +46,16 @@ export default function OrdersStep({
 					<h2 className="text-lg font-bold">Distributor Portal</h2>
 					<p className="text-sm text-muted-foreground">Manage your orders</p>
 				</div>
-				<Button aria-label="Logout" variant="ghost" size="sm" className="gap-2" onClick={onLogout}>
+				<Button
+					aria-label="Logout"
+					variant="ghost"
+					size="sm"
+					className="gap-2"
+					onClick={() => {
+						console.log("Logout button clicked");
+						router.push("/auth");
+					}}
+				>
 					<LogOut className="h-4 w-4" />
 					Logout
 				</Button>
