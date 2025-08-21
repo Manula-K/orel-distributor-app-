@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ChevronRight, Filter, LogOut, Package, Calendar, Clock } from "lucide-react";
 import type { DistributorProfile, InvoiceData } from "@/types/invoice";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatFriendlyDateTime } from "@/lib/format";
 import { useRouter } from "next/navigation";
 
 interface OrdersStepProps {
@@ -40,13 +40,11 @@ export default function OrdersStep({
 	const router = useRouter();
 	return (
 		<div className="space-y-4">
-			<div className="flex flex-wrap items-center justify-between gap-2">
-				<div className="flex items-center gap-3">
-					<Image src="/logo1.png" alt="Orel Logo" width={60} height={60} priority />
-					<div className="text-left">
-						<h2 className="text-lg font-bold">Distributor Portal</h2>
-						<p className="text-sm text-muted-foreground">Manage your orders</p>
-					</div>
+			<div className="flex items-center justify-between">
+				<Image src="/logo1.png" alt="Orel Logo" width={60} height={60} priority />
+				<div className="text-center">
+					<h2 className="text-lg font-bold">Distributor Portal</h2>
+					<p className="text-sm text-muted-foreground">Manage your orders</p>
 				</div>
 				<Button aria-label="Logout" variant="ghost" size="sm" className="gap-2" onClick={onLogout}>
 					<LogOut className="h-4 w-4" />
@@ -140,9 +138,6 @@ export default function OrdersStep({
 
 			<div className="space-y-3">
 				{filteredOrders.map((order) => {
-					const dateObject = new Date(order.invoiceDate);
-					const formattedDate = dateObject.toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" });
-					const formattedTime = dateObject.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: true }).toLowerCase();
 					return (
 						<Card
 							key={order.invoiceNumber}
@@ -172,14 +167,10 @@ export default function OrdersStep({
 								<div className="flex items-end justify-between">
 									<div className="space-y-0.5">
 										<p className="font-semibold text-[13px] leading-tight">{order.invoiceNumber}</p>
-										<div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+										<div className="flex items-center gap-2 text-[11px] text-muted-foreground">
 											<span className="flex items-center gap-1">
 												<Calendar className="w-3.5 h-3.5" />
-												<span>{formattedDate}</span>
-											</span>
-											<span className="flex items-center gap-1">
-												<Clock className="w-3.5 h-3.5" />
-												<span>{formattedTime}</span>
+												<span>{formatFriendlyDateTime(order.invoiceDate)}</span>
 											</span>
 										</div>
 									</div>

@@ -10,14 +10,14 @@ export const formatAmount = (amount: number) => {
 
 export const formatFriendlyDateTime = (iso: string) => {
 	const d = new Date(iso);
-	return d.toLocaleString("en-GB", {
-		day: "2-digit",
-		month: "long",
-		year: "numeric",
-		hour: "2-digit",
-		minute: "2-digit",
-		hour12: true,
-	});
+	const day = d.getDate().toString().padStart(2, "0");
+	const month = d.toLocaleDateString("en-GB", { month: "short" });
+	const year = d.getFullYear();
+	const hours = d.getHours().toString().padStart(2, "0");
+	const minutes = d.getMinutes().toString().padStart(2, "0");
+	const ampm = d.getHours() >= 12 ? "PM" : "AM";
+
+	return `${day} ${month} ${year} ${hours}.${minutes} ${ampm}`;
 };
 
 // Always enforce Sri Lankan format: "+94" followed by up to 9 digits.

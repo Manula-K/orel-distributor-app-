@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Package, ChevronLeft, RefreshCw, CheckCircle, Calendar, Clock, ChevronDown, ChevronUp } from "lucide-react";
 import type { InvoiceData } from "@/types/invoice";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatFriendlyDateTime } from "@/lib/format";
 import { useState } from "react";
 
 interface OrderDetailStepProps {
@@ -19,9 +19,6 @@ interface OrderDetailStepProps {
 }
 
 export default function OrderDetailStep({ invoiceData, loading, onBack, onAcceptOrder }: OrderDetailStepProps) {
-	const dateObject = new Date(invoiceData.invoiceDate);
-	const formattedDate = dateObject.toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" });
-	const formattedTime = dateObject.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: true }).toLowerCase();
 	const [itemsExpanded, setItemsExpanded] = useState(true);
 	return (
 		<div className="space-y-4 pb-32">
@@ -30,7 +27,7 @@ export default function OrderDetailStep({ invoiceData, loading, onBack, onAccept
 					<ChevronLeft className="w-4 h-4" />
 					Back to Orders
 				</Button>
-				<Image src="/logo1.png" alt="Orel Logo" width={70} height={70} />
+				<Image src="/logo1.png" alt="Orel Logo" width={60} height={60} />
 			</div>
 
 			<Card>
@@ -45,14 +42,10 @@ export default function OrderDetailStep({ invoiceData, loading, onBack, onAccept
 				<CardContent className="space-y-4">
 					<div className="flex items-center justify-between text-sm">
 						<span className="text-muted-foreground">Date/Time</span>
-						<div className="flex items-center gap-3 text-[11px]">
+						<div className="flex items-center gap-2 text-[11px]">
 							<span className="flex items-center gap-1">
 								<Calendar className="w-4 h-4 text-muted-foreground" />
-								<span className="font-medium">{formattedDate}</span>
-							</span>
-							<span className="flex items-center gap-1">
-								<Clock className="w-4 h-4 text-muted-foreground" />
-								<span className="font-medium">{formattedTime}</span>
+								<span className="font-medium">{formatFriendlyDateTime(invoiceData.invoiceDate)}</span>
 							</span>
 						</div>
 					</div>
