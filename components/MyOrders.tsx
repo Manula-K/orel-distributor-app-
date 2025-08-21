@@ -48,7 +48,7 @@ export default function MyOrders({
 			<div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
 				<div className="lg:col-span-2 space-y-4">
 					<Card className="gap-3">
-						<CardHeader className="px-4">
+						<CardHeader className="px-4 overflow-x-hidden">
 							<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
 								<CardTitle className="text-sm flex items-center gap-2">
 									<Filter className="w-4 h-4" />
@@ -56,7 +56,7 @@ export default function MyOrders({
 								</CardTitle>
 							</div>
 						</CardHeader>
-						<CardContent className="pt-0 px-4 space-y-3">
+						<CardContent className="pt-0 px-4 space-y-3 overflow-x-hidden">
 							<div className="flex flex-wrap items-end gap-3">
 								<div className="flex-[2] min-w-[12rem]">
 									<Label className="text-[11px] font-medium text-muted-foreground mb-1 block">Search</Label>
@@ -141,19 +141,21 @@ export default function MyOrders({
 													<ChevronRight className="w-4 h-4 text-muted-foreground" />
 												</div>
 
-												<div className="flex items-end justify-between">
-													<div className="space-y-0.5">
-														<p className="font-semibold text-[13px] leading-tight">{order.invoiceNumber}</p>
-														<div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+												<div className="flex items-end justify-between gap-3">
+													<div className="space-y-0.5 min-w-0">
+														<p className="font-semibold text-[13px] leading-tight truncate" title={order.invoiceNumber}>
+															{order.invoiceNumber}
+														</p>
+														<div className="flex items-center gap-2 text-[11px] text-muted-foreground min-w-0">
 															<span className="flex items-center gap-1">
 																<Calendar className="w-3.5 h-3.5" />
 																<span>{formatFriendlyDateTime(order.invoiceDate)}</span>
 															</span>
 														</div>
 													</div>
-													<div className="text-right">
+													<div className="text-right shrink-0">
 														<p className="font-bold text-sm leading-tight">{formatCurrency(order.orderTotal)}</p>
-														<p className="text-[11px] text-muted-foreground">{order.items.length} items</p>
+														<p className="text-[11px] text-muted-foreground whitespace-nowrap">{order.items.length} items</p>
 													</div>
 												</div>
 											</CardContent>

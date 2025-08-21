@@ -8,7 +8,7 @@ import { Settings } from "lucide-react";
 
 export default function SettingsPage() {
 	return (
-		<div className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background overflow-x-hidden">
 			<TopBar
 				left={
 					<div className="flex items-center gap-3">
@@ -20,7 +20,7 @@ export default function SettingsPage() {
 					</div>
 				}
 			/>
-			<div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-10">
+			<div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-10 overflow-x-hidden">
 				<Card>
 					<CardHeader>
 						<CardTitle className="flex items-center gap-2 text-lg">

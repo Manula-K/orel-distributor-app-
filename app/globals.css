@@ -80,4 +80,24 @@
 	* {
 		@apply border-border outline-ring/50;
 	}
+
+	html,
+	body {
+		@apply max-w-full overflow-x-hidden;
+	}
+
+	img,
+	svg,
+	canvas,
+	video,
+	iframe {
+		max-width: 100%;
+		height: auto;
+	}
+
+	/* Prevent long strings from forcing overflow */
+	:is(p, span, a, div) {
+		word-break: break-word;
+		overflow-wrap: anywhere;
+	}
 }

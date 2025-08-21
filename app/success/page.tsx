@@ -21,7 +21,7 @@ function SuccessPageContent() {
 	}, []);
 
 	return (
-		<div className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background overflow-x-hidden">
 			<LoadingOverlay isLoading={isPageLoading} text="Loading..." spinnerSize="lg">
 				<div className="max-w-md mx-auto p-4 py-10">
 					<Card className="text-center">

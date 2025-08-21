@@ -3,9 +3,9 @@
 import { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import TopBar from "@/components/TopBar";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, LogOut } from "lucide-react";
+import { LoadingButton } from "@/components/ui/loading-button";
+import { ChevronLeft, CheckCircle } from "lucide-react";
 import OrderDetailStep from "@/components/OrderDetails";
 import { ORDER_HISTORY } from "@/lib/mock-data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,6 +28,13 @@ export default function OrderPage() {
 		return () => clearTimeout(timer);
 	}, []);
 
+	const handleAcceptOrder = async () => {
+		setLoading(true);
+		await new Promise((r) => setTimeout(r, 1500));
+		setLoading(false);
+		router.push(`/success?invoice=${encodeURIComponent(invoiceData!.invoiceNumber)}&total=${encodeURIComponent(invoiceData!.orderTotal.toString())}`);
+	};
+
 	if (!invoiceData) {
 		return (
 			<div className="min-h-screen bg-background">
@@ -49,45 +56,27 @@ export default function OrderPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-background">
-			<TopBar
-				left={
-					<div className="flex items-center gap-3">
-						<Image src="/logo1.png" alt="Orel Logo" width={48} height={48} />
-						<div className="leading-tight">
-							<p className="text-sm font-semibold">Distributor Portal</p>
-							<p className="text-xs text-muted-foreground">Order details</p>
-						</div>
-					</div>
-				}
-				right={
-					<Button aria-label="Logout" variant="ghost" size="sm" className="gap-2" onClick={() => router.push("/auth")}>
-						<LogOut className="h-4 w-4" />
-						<span className="hidden sm:inline">Logout</span>
-					</Button>
-				}
-			/>
+		<div className="min-h-screen bg-background overflow-x-hidden">
 			<LoadingOverlay isLoading={isLoadingOrder} text="Loading order details..." spinnerSize="lg">
-				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-10">
-					<div className="mb-4">
+				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-10 overflow-x-hidden">
+					<div className="mb-4 flex items-center justify-between">
 						<Button variant="ghost" size="sm" onClick={() => router.push("/")} className="flex items-center gap-2">
 							<ChevronLeft className="w-4 h-4" />
 							Back to Orders
 						</Button>
+						<LoadingButton
+							onClick={handleAcceptOrder}
+							loading={loading}
+							loadingText="Processing..."
+							loadingSpinnerSize="sm"
+							loadingSpinnerVariant="white"
+							className="px-4 py-2 h-auto text-sm font-semibold bg-green-600 hover:bg-green-700 text-white rounded-md shadow-sm"
+						>
+							<CheckCircle className="w-4 h-4 mr-2" />
+							Accept Order
+						</LoadingButton>
 					</div>
-					<OrderDetailStep
-						invoiceData={invoiceData}
-						loading={loading}
-						onBack={() => router.push("/")}
-						onAcceptOrder={async () => {
-							setLoading(true);
-							await new Promise((r) => setTimeout(r, 1500));
-							setLoading(false);
-							router.push(
-								`/success?invoice=${encodeURIComponent(invoiceData.invoiceNumber)}&total=${encodeURIComponent(invoiceData.orderTotal.toString())}`
-							);
-						}}
-					/>
+					<OrderDetailStep invoiceData={invoiceData} loading={loading} onBack={() => router.push("/")} onAcceptOrder={handleAcceptOrder} />
 				</div>
 			</LoadingOverlay>
 		</div>
