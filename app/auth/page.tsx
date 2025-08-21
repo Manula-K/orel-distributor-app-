@@ -1,15 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import PhoneNumberInput from "@/components/PhoneNumberInput";
 import { normalizeSriLankaPhone } from "@/lib/format";
+import { LoadingOverlay } from "@/components/ui/loading-overlay";
 
 export default function AuthPage() {
 	const router = useRouter();
 	const [phoneNumber, setPhoneNumber] = useState("+94");
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
+	const [isPageLoading, setIsPageLoading] = useState(true);
+
+	useEffect(() => {
+		// Simulate page loading
+		const timer = setTimeout(() => setIsPageLoading(false), 500);
+		return () => clearTimeout(timer);
+	}, []);
 
 	const sendOTP = async () => {
 		setLoading(true);
@@ -34,15 +42,17 @@ export default function AuthPage() {
 
 	return (
 		<div className="min-h-screen bg-background flex items-center justify-center">
-			<div className="w-full max-w-md mx-auto px-4 space-y-6">
-				<PhoneNumberInput
-					phoneNumber={phoneNumber}
-					onPhoneChange={(value) => setPhoneNumber(normalizeSriLankaPhone(value))}
-					error={error}
-					loading={loading}
-					onSendOTP={sendOTP}
-				/>
-			</div>
+			<LoadingOverlay isLoading={isPageLoading} text="Loading..." spinnerSize="lg">
+				<div className="w-full max-w-md mx-auto px-4 space-y-6">
+					<PhoneNumberInput
+						phoneNumber={phoneNumber}
+						onPhoneChange={(value) => setPhoneNumber(normalizeSriLankaPhone(value))}
+						error={error}
+						loading={loading}
+						onSendOTP={sendOTP}
+					/>
+				</div>
+			</LoadingOverlay>
 		</div>
 	);
 }

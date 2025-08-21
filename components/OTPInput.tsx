@@ -1,12 +1,13 @@
 "use client";
 
 import type React from "react";
+import { LoadingButton } from "@/components/ui/loading-button";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Clock, RefreshCw, Shield } from "lucide-react";
+import { Clock, Shield } from "lucide-react";
 import { useRef } from "react";
 
 interface OTPInputProps {
@@ -99,16 +100,16 @@ export default function OTPInput({
 					)}
 				</div>
 
-				<Button onClick={onVerify} disabled={loading || otp.join("").length !== 4} className="w-full" size="lg">
-					{loading ? (
-						<>
-							<RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-							Verifying...
-						</>
-					) : (
-						"Verify OTP"
-					)}
-				</Button>
+				<LoadingButton
+					onClick={onVerify}
+					disabled={otp.join("").length !== 4}
+					className="w-full"
+					size="lg"
+					loading={loading}
+					loadingText="Verifying..."
+				>
+					Verify OTP
+				</LoadingButton>
 
 				<Button variant="outline" onClick={onBack} className="w-full">
 					Back to Phone Number

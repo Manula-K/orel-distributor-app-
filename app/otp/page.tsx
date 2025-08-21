@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import OTPInput from "@/components/OTPInput";
+import { LoadingOverlay } from "@/components/ui/loading-overlay";
 
 function OtpPageContent() {
 	const router = useRouter();
@@ -14,6 +15,7 @@ function OtpPageContent() {
 	const [loading, setLoading] = useState(false);
 	const [otpAttempts, setOtpAttempts] = useState(0);
 	const [countdown, setCountdown] = useState(0);
+	const [isPageLoading, setIsPageLoading] = useState(true);
 
 	useEffect(() => {
 		const stored = phoneFromQuery ?? (typeof window !== "undefined" ? localStorage.getItem("phone") : null);
@@ -25,6 +27,12 @@ function OtpPageContent() {
 			setCountdown(0);
 		}
 	}, [phoneFromQuery]);
+
+	useEffect(() => {
+		// Simulate page loading
+		const timer = setTimeout(() => setIsPageLoading(false), 400);
+		return () => clearTimeout(timer);
+	}, []);
 
 	useEffect(() => {
 		if (countdown > 0) {
@@ -59,25 +67,27 @@ function OtpPageContent() {
 
 	return (
 		<div className="min-h-screen bg-background flex items-center justify-center">
-			<div className="w-full max-w-md mx-auto px-4 space-y-6">
-				<OTPInput
-					phoneNumber={phoneNumber}
-					otp={otp}
-					error={error}
-					loading={loading}
-					otpAttempts={otpAttempts}
-					countdown={countdown}
-					onVerify={verifyOTP}
-					onResend={resendOTP}
-					onBack={() => router.push("/auth")}
-					onOtpChange={(index, value) => {
-						if (value.length > 1) return;
-						const next = [...otp];
-						next[index] = value;
-						setOtp(next);
-					}}
-				/>
-			</div>
+			<LoadingOverlay isLoading={isPageLoading} text="Loading..." spinnerSize="lg">
+				<div className="w-full max-w-md mx-auto px-4 space-y-6">
+					<OTPInput
+						phoneNumber={phoneNumber}
+						otp={otp}
+						error={error}
+						loading={loading}
+						otpAttempts={otpAttempts}
+						countdown={countdown}
+						onVerify={verifyOTP}
+						onResend={resendOTP}
+						onBack={() => router.push("/auth")}
+						onOtpChange={(index, value) => {
+							if (value.length > 1) return;
+							const next = [...otp];
+							next[index] = value;
+							setOtp(next);
+						}}
+					/>
+				</div>
+			</LoadingOverlay>
 		</div>
 	);
 }

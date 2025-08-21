@@ -4,11 +4,13 @@ import { useEffect, useMemo, useState } from "react";
 import OrdersStep from "@/components/MyOrders";
 import { ORDER_HISTORY, MOCK_DISTRIBUTOR } from "@/lib/mock-data";
 import type { DistributorProfile, InvoiceData } from "@/types/invoice";
+import { LoadingOverlay } from "@/components/ui/loading-overlay";
 
 export default function HomePage() {
 	const [selectedMonth, setSelectedMonth] = useState("all");
 	const [selectedYear, setSelectedYear] = useState("all");
 	const [distributor, setDistributor] = useState<DistributorProfile | null>(MOCK_DISTRIBUTOR);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const orderHistory: InvoiceData[] = ORDER_HISTORY;
 
@@ -37,22 +39,31 @@ export default function HomePage() {
 		if (selectedMonth !== "all" && !availableMonths.has(selectedMonth)) setSelectedMonth("all");
 	}, [selectedYear]);
 
+	useEffect(() => {
+		// Simulate initial loading
+		const timer = setTimeout(() => setIsLoading(false), 800);
+		return () => clearTimeout(timer);
+	}, []);
+
 	return (
 		<div className="min-h-screen bg-background">
-			<div className="max-w-md mx-auto px-4 py-6">
-				<OrdersStep
-					distributor={distributor}
-					selectedYear={selectedYear}
-					setSelectedYear={(v) => setSelectedYear(v)}
-					selectedMonth={selectedMonth}
-					setSelectedMonth={(v) => setSelectedMonth(v)}
-					uniqueYears={uniqueYears}
-					uniqueMonthNames={uniqueMonthNames}
-					filteredOrders={filteredOrders}
-					onViewOrderDetail={() => {}}
-					onLogout={() => {}}
-				/>
-			</div>
+			<LoadingOverlay isLoading={isLoading} text="Loading orders..." spinnerSize="lg">
+				<div className="max-w-md mx-auto px-4 py-6">
+					<OrdersStep
+						distributor={distributor}
+						selectedYear={selectedYear}
+						setSelectedYear={(v) => setSelectedYear(v)}
+						selectedMonth={selectedMonth}
+						setSelectedMonth={(v) => setSelectedMonth(v)}
+						uniqueYears={uniqueYears}
+						uniqueMonthNames={uniqueMonthNames}
+						filteredOrders={filteredOrders}
+						onViewOrderDetail={() => {}}
+						onLogout={() => {}}
+						isLoading={isLoading}
+					/>
+				</div>
+			</LoadingOverlay>
 		</div>
 	);
 }

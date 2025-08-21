@@ -2,24 +2,12 @@
 
 import React from "react";
 import Image from "next/image";
+import { LoadingButton } from "@/components/ui/loading-button";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import {
-	Package,
-	ChevronLeft,
-	RefreshCw,
-	CheckCircle,
-	Calendar,
-	Clock,
-	ChevronDown,
-	ChevronUp,
-	ShoppingBag,
-	Warehouse,
-	Truck,
-	MapPin,
-} from "lucide-react";
+import { Package, ChevronLeft, CheckCircle, Calendar, Clock, ChevronDown, ChevronUp, ShoppingBag, Warehouse, Truck, MapPin } from "lucide-react";
 import type { InvoiceData } from "@/types/invoice";
 import { formatCurrency, formatFriendlyDateTime } from "@/lib/format";
 import { useState } from "react";
@@ -262,23 +250,17 @@ export default function OrderDetails({ invoiceData, loading, onBack, onAcceptOrd
 			{invoiceData.status === "current" && (
 				<div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background via-background/95 to-transparent">
 					<div className="max-w-md mx-auto">
-						<Button
+						<LoadingButton
 							onClick={onAcceptOrder}
-							disabled={loading}
 							className="w-full px-8 py-4 h-auto text-base font-bold bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-xl hover:shadow-green-500/25 transition-all duration-300 rounded-xl"
+							loading={loading}
+							loadingText="Processing Order..."
+							loadingSpinnerSize="md"
+							loadingSpinnerVariant="white"
 						>
-							{loading ? (
-								<>
-									<RefreshCw className="w-5 h-5 mr-3 animate-spin" />
-									Processing Order...
-								</>
-							) : (
-								<>
-									<CheckCircle className="w-5 h-5 mr-3" />
-									Accept Order
-								</>
-							)}
-						</Button>
+							<CheckCircle className="w-5 h-5 mr-3" />
+							Accept Order
+						</LoadingButton>
 					</div>
 				</div>
 			)}

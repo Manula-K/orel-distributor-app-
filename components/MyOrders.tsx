@@ -11,6 +11,7 @@ import { ChevronRight, Filter, LogOut, Package, Calendar, Clock } from "lucide-r
 import type { DistributorProfile, InvoiceData } from "@/types/invoice";
 import { formatCurrency, formatFriendlyDateTime } from "@/lib/format";
 import { useRouter } from "next/navigation";
+import { OrderCardSkeleton } from "@/components/ui/loading-skeleton";
 
 interface MyOrdersProps {
 	distributor: DistributorProfile | null;
@@ -23,6 +24,7 @@ interface MyOrdersProps {
 	filteredOrders: InvoiceData[];
 	onViewOrderDetail: (order: InvoiceData) => void;
 	onLogout: () => void;
+	isLoading?: boolean;
 }
 
 export default function MyOrders({
@@ -36,6 +38,7 @@ export default function MyOrders({
 	filteredOrders,
 	onViewOrderDetail,
 	onLogout,
+	isLoading = false,
 }: MyOrdersProps) {
 	const router = useRouter();
 	return (
@@ -146,52 +149,55 @@ export default function MyOrders({
 			</Card>
 
 			<div className="space-y-3">
-				{filteredOrders.map((order) => {
-					return (
-						<Card
-							key={order.invoiceNumber}
-							className={`cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02] ${
-								order.status === "current" ? "border-red-500/30 bg-red-50/30" : "hover:border-primary/50"
-							}`}
-							onClick={() => router.push(`/${encodeURIComponent(order.invoiceNumber)}`)}
-						>
-							<CardContent>
-								<div className="flex items-center justify-between mb-1.5">
-									<div className="flex items-center gap-1.5">
-										<Badge
-											variant={order.status === "current" ? "default" : "outline"}
-											className={`text-[10px] h-5 px-2 ${order.status === "current" ? "" : "text-green-600 border-green-600"}`}
-										>
-											{order.status === "current" ? "Current Order" : "Completed"}
-										</Badge>
-										{order.status === "current" && (
-											<Badge variant="outline" className="text-[10px] h-5 px-2 text-red-600 border-red-600">
-												Action Required
-											</Badge>
-										)}
-									</div>
-									<ChevronRight className="w-4 h-4 text-muted-foreground" />
-								</div>
-
-								<div className="flex items-end justify-between">
-									<div className="space-y-0.5">
-										<p className="font-semibold text-[13px] leading-tight">{order.invoiceNumber}</p>
-										<div className="flex items-center gap-2 text-[11px] text-muted-foreground">
-											<span className="flex items-center gap-1">
-												<Calendar className="w-3.5 h-3.5" />
-												<span>{formatFriendlyDateTime(order.invoiceDate)}</span>
-											</span>
+				{isLoading
+					? // Show skeleton loading for orders
+					  Array.from({ length: 3 }).map((_, index) => <OrderCardSkeleton key={index} />)
+					: filteredOrders.map((order) => {
+							return (
+								<Card
+									key={order.invoiceNumber}
+									className={`cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02] ${
+										order.status === "current" ? "border-red-500/30 bg-red-50/30" : "hover:border-primary/50"
+									}`}
+									onClick={() => router.push(`/${encodeURIComponent(order.invoiceNumber)}`)}
+								>
+									<CardContent>
+										<div className="flex items-center justify-between mb-1.5">
+											<div className="flex items-center gap-1.5">
+												<Badge
+													variant={order.status === "current" ? "default" : "outline"}
+													className={`text-[10px] h-5 px-2 ${order.status === "current" ? "" : "text-green-600 border-green-600"}`}
+												>
+													{order.status === "current" ? "Current Order" : "Completed"}
+												</Badge>
+												{order.status === "current" && (
+													<Badge variant="outline" className="text-[10px] h-5 px-2 text-red-600 border-red-600">
+														Action Required
+													</Badge>
+												)}
+											</div>
+											<ChevronRight className="w-4 h-4 text-muted-foreground" />
 										</div>
-									</div>
-									<div className="text-right">
-										<p className="font-bold text-sm leading-tight">{formatCurrency(order.orderTotal)}</p>
-										<p className="text-[11px] text-muted-foreground">{order.items.length} items</p>
-									</div>
-								</div>
-							</CardContent>
-						</Card>
-					);
-				})}
+
+										<div className="flex items-end justify-between">
+											<div className="space-y-0.5">
+												<p className="font-semibold text-[13px] leading-tight">{order.invoiceNumber}</p>
+												<div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+													<span className="flex items-center gap-1">
+														<Calendar className="w-3.5 h-3.5" />
+														<span>{formatFriendlyDateTime(order.invoiceDate)}</span>
+													</span>
+												</div>
+											</div>
+											<div className="text-right">
+												<p className="font-bold text-sm leading-tight">{formatCurrency(order.orderTotal)}</p>
+												<p className="text-[11px] text-muted-foreground">{order.items.length} items</p>
+											</div>
+										</div>
+									</CardContent>
+								</Card>
+							);
+					  })}
 			</div>
 
 			{filteredOrders.length === 0 && (

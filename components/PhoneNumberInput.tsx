@@ -1,11 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { LoadingButton } from "@/components/ui/loading-button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Phone, RefreshCw } from "lucide-react";
+import { Phone } from "lucide-react";
 
 interface PhoneStepProps {
 	phoneNumber: string;
@@ -46,16 +46,16 @@ export default function PhoneStep({ phoneNumber, onPhoneChange, error, loading, 
 					</Alert>
 				)}
 
-				<Button onClick={onSendOTP} disabled={loading || phoneNumber.length < 12} className="w-full" size="lg">
-					{loading ? (
-						<>
-							<RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-							Sending OTP...
-						</>
-					) : (
-						"Send OTP"
-					)}
-				</Button>
+				<LoadingButton
+					onClick={onSendOTP}
+					disabled={phoneNumber.length < 12}
+					className="w-full"
+					size="lg"
+					loading={loading}
+					loadingText="Sending OTP..."
+				>
+					Send OTP
+				</LoadingButton>
 			</CardContent>
 		</Card>
 	);
