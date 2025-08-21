@@ -48,14 +48,6 @@ export default function OrderDetails({ invoiceData, loading, onBack, onAcceptOrd
 	];
 	return (
 		<div className="space-y-4 pb-32">
-			<div className="flex items-center justify-between">
-				<Button variant="ghost" size="sm" onClick={onBack} className="flex items-center gap-2">
-					<ChevronLeft className="w-4 h-4" />
-					Back to Orders
-				</Button>
-				<Image src="/logo1.png" alt="Orel Logo" width={60} height={60} />
-			</div>
-
 			<Card>
 				<CardHeader>
 					<div className="flex items-center justify-between">
@@ -208,7 +200,7 @@ export default function OrderDetails({ invoiceData, loading, onBack, onAcceptOrd
 			</Card>
 
 			{isCurrentOrder && (
-				<div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background via-background/95 to-transparent">
+				<div className="fixed bottom-0 left-0 right-0 p-6 pb-[max(env(safe-area-inset-bottom),1.25rem)] bg-gradient-to-t from-background via-background/95 to-transparent">
 					<div className="max-w-md mx-auto">
 						<LoadingButton
 							onClick={onAcceptOrder}

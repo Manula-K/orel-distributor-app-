@@ -1,13 +1,11 @@
 "use client";
 
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ChevronRight, Filter, LogOut, Package, Calendar } from "lucide-react";
+import { ChevronRight, Filter, Package, Calendar, ShoppingCart, Info, Mail, Phone, MapPin, Hash } from "lucide-react";
 import type { DistributorProfile, InvoiceData } from "@/types/invoice";
 import { formatCurrency, formatFriendlyDateTime } from "@/lib/format";
 import { useRouter } from "next/navigation";
@@ -19,6 +17,10 @@ interface MyOrdersProps {
 	setSelectedYear: (v: string) => void;
 	selectedMonth: string;
 	setSelectedMonth: (v: string) => void;
+	selectedStatus: string;
+	setSelectedStatus: (v: string) => void;
+	keyword: string;
+	setKeyword: (v: string) => void;
 	uniqueYears: string[];
 	uniqueMonthNames: string[];
 	filteredOrders: InvoiceData[];
@@ -31,6 +33,10 @@ export default function MyOrders({
 	setSelectedYear,
 	selectedMonth,
 	setSelectedMonth,
+	selectedStatus,
+	setSelectedStatus,
+	keyword,
+	setKeyword,
 	uniqueYears,
 	uniqueMonthNames,
 	filteredOrders,
@@ -38,172 +44,198 @@ export default function MyOrders({
 }: MyOrdersProps) {
 	const router = useRouter();
 	return (
-		<div className="space-y-4">
-			<div className="flex items-center justify-between">
-				<Image src="/logo1.png" alt="Orel Logo" width={60} height={60} priority />
-				<div className="text-center">
-					<h2 className="text-lg font-bold">Distributor Portal</h2>
-					<p className="text-sm text-muted-foreground">Manage your orders</p>
-				</div>
-				<Button
-					aria-label="Logout"
-					variant="ghost"
-					size="sm"
-					className="gap-2"
-					onClick={() => {
-						console.log("Logout button clicked");
-						router.push("/auth");
-					}}
-				>
-					<LogOut className="h-4 w-4" />
-					Logout
-				</Button>
-			</div>
+		<div className="space-y-4 lg:space-y-6">
+			<div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
+				<div className="lg:col-span-2 space-y-4">
+					<Card className="gap-3">
+						<CardHeader className="px-4">
+							<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+								<CardTitle className="text-sm flex items-center gap-2">
+									<Filter className="w-4 h-4" />
+									Filter Orders
+								</CardTitle>
+							</div>
+						</CardHeader>
+						<CardContent className="pt-0 px-4 space-y-3">
+							<div className="flex flex-wrap items-end gap-3">
+								<div className="flex-[2] min-w-[12rem]">
+									<Label className="text-[11px] font-medium text-muted-foreground mb-1 block">Search</Label>
+									<Input value={keyword} onChange={(e) => setKeyword(e.target.value)} placeholder="Search orders..." className="h-8 text-sm" />
+								</div>
+								<div className="flex-1 min-w-[7rem]">
+									<Label className="text-[11px] font-medium text-muted-foreground mb-1 block">Filter by Year</Label>
+									<Select value={selectedYear} onValueChange={(v) => setSelectedYear(v)}>
+										<SelectTrigger size="sm" className="w-full min-w-[7rem]">
+											<SelectValue placeholder="Year" />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value="all">All Years</SelectItem>
+											{uniqueYears.map((year) => (
+												<SelectItem key={year} value={year}>
+													{year}
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+								</div>
+								<div className="flex-1 min-w-[8.5rem]">
+									<Label className="text-[11px] font-medium text-muted-foreground mb-1 block">Filter by Month</Label>
+									<Select value={selectedMonth} onValueChange={(v) => setSelectedMonth(v)}>
+										<SelectTrigger size="sm" className="w-full min-w-[8.5rem]">
+											<SelectValue placeholder="Month" />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value="all">All Months</SelectItem>
+											{uniqueMonthNames.map((monthName) => (
+												<SelectItem key={monthName} value={monthName}>
+													{monthName}
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+								</div>
+								<div className="flex-1 min-w-[8.5rem]">
+									<Label className="text-[11px] font-medium text-muted-foreground mb-1 block">Filter by Status</Label>
+									<Select value={selectedStatus} onValueChange={(v) => setSelectedStatus(v)}>
+										<SelectTrigger size="sm" className="w-full min-w-[8.5rem]">
+											<SelectValue placeholder="Status" />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value="all">All Status</SelectItem>
+											<SelectItem value="current">Current</SelectItem>
+											<SelectItem value="completed">Completed</SelectItem>
+										</SelectContent>
+									</Select>
+								</div>
+							</div>
+						</CardContent>
+					</Card>
 
-			{distributor && (
-				<Card className="gap-0">
-					<CardHeader className="pb-1">
-						<CardTitle className="text-base">{distributor.name}</CardTitle>
-					</CardHeader>
-					<CardContent className="pt-0">
-						<Accordion type="single" collapsible>
-							<AccordionItem value="dist-details">
-								<AccordionTrigger className="px-0 py-1 text-sm">View more details</AccordionTrigger>
-								<AccordionContent className="px-0">
-									<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-										<div className="rounded-lg bg-muted/30 p-3">
-											<p className="text-[11px] text-muted-foreground">Distributor Code</p>
-											<p className="font-mono font-medium">{distributor.code}</p>
-										</div>
-										<div className="rounded-lg bg-muted/30 p-3">
-											<p className="text-[11px] text-muted-foreground">Region</p>
-											<p className="font-medium">{distributor.region}</p>
-										</div>
-										<div className="rounded-lg bg-muted/30 p-3">
-											<p className="text-[11px] text-muted-foreground">Email</p>
-											<a href={`mailto:${distributor.email}`} className="font-medium break-all text-primary hover:underline">
-												{distributor.email}
-											</a>
-										</div>
-										<div className="rounded-lg bg-muted/30 p-3">
-											<p className="text-[11px] text-muted-foreground">Phone</p>
-											<a href={`tel:${distributor.phone.replace(/\s+/g, "")}`} className="font-medium text-primary hover:underline">
-												{distributor.phone}
-											</a>
-										</div>
-									</div>
-								</AccordionContent>
-							</AccordionItem>
-						</Accordion>
-					</CardContent>
-				</Card>
-			)}
-
-			<Card className="gap-3">
-				<CardHeader>
-					<CardTitle className="text-sm flex items-center gap-2">
-						<Filter className="w-4 h-4" />
-						Filter Orders
-					</CardTitle>
-				</CardHeader>
-				<CardContent className="pt-0 space-y-3">
-					<div className="flex flex-wrap items-end gap-3">
-						<div className="flex-1 min-w-[7rem]">
-							<Label className="text-[11px] font-medium text-muted-foreground mb-1 block">Filter by Year</Label>
-							<Select value={selectedYear} onValueChange={(v) => setSelectedYear(v)}>
-								<SelectTrigger size="sm" className="w-full min-w-[7rem]">
-									<SelectValue placeholder="Year" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="all">All Years</SelectItem>
-									{uniqueYears.map((year) => (
-										<SelectItem key={year} value={year}>
-											{year}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-						</div>
-						<div className="flex-1 min-w-[8.5rem]">
-							<Label className="text-[11px] font-medium text-muted-foreground mb-1 block">Filter by Month</Label>
-							<Select value={selectedMonth} onValueChange={(v) => setSelectedMonth(v)}>
-								<SelectTrigger size="sm" className="w-full min-w-[8.5rem]">
-									<SelectValue placeholder="Month" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="all">All Months</SelectItem>
-									{uniqueMonthNames.map((monthName) => (
-										<SelectItem key={monthName} value={monthName}>
-											{monthName}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-						</div>
-					</div>
-				</CardContent>
-			</Card>
-
-			<div className="space-y-3">
-				{isLoading
-					? // Show skeleton loading for orders
-					  Array.from({ length: 3 }).map((_, index) => <OrderCardSkeleton key={index} />)
-					: filteredOrders.map((order) => {
-							return (
-								<Card
-									key={order.invoiceNumber}
-									className={`cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02] ${
-										order.status === "current" ? "border-red-500/30 bg-red-50/30" : "hover:border-primary/50"
-									}`}
-									onClick={() => router.push(`/${encodeURIComponent(order.invoiceNumber)}`)}
-								>
-									<CardContent>
-										<div className="flex items-center justify-between mb-1.5">
-											<div className="flex items-center gap-1.5">
-												<Badge
-													variant={order.status === "current" ? "default" : "outline"}
-													className={`text-[10px] h-5 px-2 ${order.status === "current" ? "" : "text-green-600 border-green-600"}`}
-												>
-													{order.status === "current" ? "Current Order" : "Completed"}
-												</Badge>
-												{order.status === "current" && (
-													<Badge variant="outline" className="text-[10px] h-5 px-2 text-red-600 border-red-600">
-														Action Required
-													</Badge>
-												)}
-											</div>
-											<ChevronRight className="w-4 h-4 text-muted-foreground" />
-										</div>
-
-										<div className="flex items-end justify-between">
-											<div className="space-y-0.5">
-												<p className="font-semibold text-[13px] leading-tight">{order.invoiceNumber}</p>
-												<div className="flex items-center gap-2 text-[11px] text-muted-foreground">
-													<span className="flex items-center gap-1">
-														<Calendar className="w-3.5 h-3.5" />
-														<span>{formatFriendlyDateTime(order.invoiceDate)}</span>
-													</span>
+					<div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+						{isLoading
+							? Array.from({ length: 3 }).map((_, index) => <OrderCardSkeleton key={index} />)
+							: filteredOrders.map((order) => {
+									return (
+										<Card
+											key={order.invoiceNumber}
+											className={`cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.01] ${
+												order.status === "current" ? "border-red-500/30 bg-red-50/30" : "hover:border-primary/50"
+											}`}
+											onClick={() => router.push(`/${encodeURIComponent(order.invoiceNumber)}`)}
+										>
+											<CardContent>
+												<div className="flex items-center justify-between mb-1.5">
+													<div className="flex items-center gap-1.5">
+														<Badge
+															variant={order.status === "current" ? "default" : "outline"}
+															className={`text-[10px] h-5 px-2 ${order.status === "current" ? "" : "text-green-600 border-green-600"}`}
+														>
+															{order.status === "current" ? "Current Order" : "Completed"}
+														</Badge>
+														{order.status === "current" && (
+															<Badge variant="outline" className="text-[10px] h-5 px-2 text-red-600 border-red-600">
+																Action Required
+															</Badge>
+														)}
+													</div>
+													<ChevronRight className="w-4 h-4 text-muted-foreground" />
 												</div>
-											</div>
-											<div className="text-right">
-												<p className="font-bold text-sm leading-tight">{formatCurrency(order.orderTotal)}</p>
-												<p className="text-[11px] text-muted-foreground">{order.items.length} items</p>
-											</div>
-										</div>
-									</CardContent>
-								</Card>
-							);
-					  })}
-			</div>
 
-			{filteredOrders.length === 0 && (
-				<Card>
-					<CardContent className="text-center py-8">
-						<Package className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-						<p className="text-muted-foreground">No orders found</p>
-					</CardContent>
-				</Card>
-			)}
+												<div className="flex items-end justify-between">
+													<div className="space-y-0.5">
+														<p className="font-semibold text-[13px] leading-tight">{order.invoiceNumber}</p>
+														<div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+															<span className="flex items-center gap-1">
+																<Calendar className="w-3.5 h-3.5" />
+																<span>{formatFriendlyDateTime(order.invoiceDate)}</span>
+															</span>
+														</div>
+													</div>
+													<div className="text-right">
+														<p className="font-bold text-sm leading-tight">{formatCurrency(order.orderTotal)}</p>
+														<p className="text-[11px] text-muted-foreground">{order.items.length} items</p>
+													</div>
+												</div>
+											</CardContent>
+										</Card>
+									);
+							  })}
+					</div>
+
+					{filteredOrders.length === 0 && (
+						<Card>
+							<CardContent className="text-center py-8">
+								<Package className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+								<p className="text-muted-foreground">No orders found</p>
+							</CardContent>
+						</Card>
+					)}
+				</div>
+				{distributor && (
+					<div className="lg:col-span-1">
+						<Card className="gap-0">
+							<CardHeader className="pb-2 px-4">
+								<CardTitle className="text-base flex items-center gap-2">
+									<ShoppingCart className="w-4 h-4" />
+									{distributor.name}
+								</CardTitle>
+							</CardHeader>
+							<CardContent className="pt-0 px-4">
+								<div className="space-y-1">
+									<div className="flex items-center justify-between rounded-md bg-muted/30 p-3">
+										<div className="flex items-center gap-2">
+											<Hash className="w-4 h-4 text-muted-foreground" />
+											<p className="text-sm text-muted-foreground">Distributor Code</p>
+										</div>
+										<p className="font-mono font-medium text-sm">{distributor.code}</p>
+									</div>
+									<div className="flex items-center justify-between rounded-md bg-muted/30 p-3">
+										<div className="flex items-center gap-2">
+											<MapPin className="w-4 h-4 text-muted-foreground" />
+											<p className="text-sm text-muted-foreground">Region</p>
+										</div>
+										<p className="font-medium text-sm">{distributor.region}</p>
+									</div>
+									<div className="flex items-center justify-between rounded-md bg-muted/30 p-3">
+										<div className="flex items-center gap-2">
+											<Mail className="w-4 h-4 text-muted-foreground" />
+											<p className="text-sm text-muted-foreground">Email</p>
+										</div>
+										<a href={`mailto:${distributor.email}`} className="font-medium text-sm break-all text-primary hover:underline">
+											{distributor.email}
+										</a>
+									</div>
+									<div className="flex items-center justify-between rounded-md bg-muted/30 p-3">
+										<div className="flex items-center gap-2">
+											<Phone className="w-4 h-4 text-muted-foreground" />
+											<p className="text-sm text-muted-foreground">Phone</p>
+										</div>
+										<a href={`tel:${distributor.phone.replace(/\s+/g, "")}`} className="font-medium text-sm text-primary hover:underline">
+											{distributor.phone}
+										</a>
+									</div>
+								</div>
+							</CardContent>
+						</Card>
+
+						<Card className="gap-0 mt-4">
+							<CardHeader className="pb-2 px-4">
+								<CardTitle className="text-base flex items-center gap-2">
+									<Info className="w-4 h-4" />
+									Description
+								</CardTitle>
+							</CardHeader>
+							<CardContent className="pt-0 px-4">
+								<p className="text-sm text-muted-foreground">
+									Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor tempor incididunt ut labore et dolore magna aliqua.
+									Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor tempor incididunt ut labore et dolore magna
+									aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor tempor incididunt ut labore et dolore magna
+								</p>
+							</CardContent>
+						</Card>
+					</div>
+				)}
+			</div>
 		</div>
 	);
 }
