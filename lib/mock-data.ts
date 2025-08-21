@@ -21,7 +21,7 @@ export const ORDER_HISTORY: InvoiceData[] = [
 			{
 				id: "1",
 				sku: "MCB-1P-06A",
-				name: "SIGMA MCB 1POLE 06A Type C - 6kA",
+				name: "SIGMA MCB 1POLE 06A Type C - 6kA SIGMA MCB 1POLE 06A Type C - 6kA",
 				quantity: 50,
 				unitPrice: 2850.0,
 				lineTotal: 12540000.0,
@@ -29,7 +29,7 @@ export const ORDER_HISTORY: InvoiceData[] = [
 			{
 				id: "2",
 				sku: "LED-07W-DL",
-				name: "LED BULB SCREW TYPE 07W D/L",
+				name: "LED BULB SCREW TYPE 07W D/L LED BULB SCREW TYPE 07W D/L",
 				quantity: 200,
 				unitPrice: 1940.0,
 				lineTotal: 34840000.0,
@@ -37,7 +37,7 @@ export const ORDER_HISTORY: InvoiceData[] = [
 			{
 				id: "3",
 				sku: "SW-2W-WH",
-				name: "SWITCH 2 WAY WHITE",
+				name: "SWITCH 2 WAY WHITE SWITCH 2 WAY WHITE",
 				quantity: 100,
 				unitPrice: 1025.0,
 				lineTotal: 97270005.0,
@@ -45,7 +45,7 @@ export const ORDER_HISTORY: InvoiceData[] = [
 			{
 				id: "4",
 				sku: "MCB-1P-06A",
-				name: "SIGMA MCB 1POLE 06A Type C - 6kA",
+				name: "SIGMA MCB 1POLE 06A Type C - 6kA SIGMA MCB 1POLE 06A Type C - 6kA",
 				quantity: 50,
 				unitPrice: 2850.0,
 				lineTotal: 12540000.0,
@@ -225,7 +225,7 @@ export const ORDER_HISTORY: InvoiceData[] = [
 			{
 				id: "10",
 				sku: "EXT-3M-WH",
-				name: "EXTENSION CORD 3 METER WHITE",
+				name: "EXTENSION CORD 3 METER WHITE  EXTENSION CORD 3 METER WHITE EXTENSION CORD 3 METER WHITE EXTENSION CORD 3 METER WHITE ",
 				quantity: 80,
 				unitPrice: 1850.0,
 				lineTotal: 148000.0,
@@ -233,7 +233,7 @@ export const ORDER_HISTORY: InvoiceData[] = [
 			{
 				id: "12",
 				sku: "EXT-3M-WH",
-				name: "EXTENSION CORD 3 METER WHITE",
+				name: "EXTENSION CORD 3 METER WHITE EXTENSION CORD 3 METER WHITE ",
 				quantity: 80,
 				unitPrice: 1850.0,
 				lineTotal: 148000.0,
@@ -241,7 +241,7 @@ export const ORDER_HISTORY: InvoiceData[] = [
 			{
 				id: "13",
 				sku: "EXT-3M-WH",
-				name: "EXTENSION CORD 3 METER WHITE",
+				name: "EXTENSION CORD 3 METER WHITE EXTENSION CORD 3 METER WHITE ",
 				quantity: 80,
 				unitPrice: 1850.0,
 				lineTotal: 148000.0,

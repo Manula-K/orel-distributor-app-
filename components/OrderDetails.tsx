@@ -252,7 +252,7 @@ export default function OrderDetails({ invoiceData, loading, onBack, onAcceptOrd
 													<div className="flex items-center justify-between gap-2">
 														<div className="flex flex-col items-start gap-1 min-w-0">
 															<p className="text-sm font-semibold leading-snug truncate">{item.sku}</p>
-															<span className="text-[10px] text-muted-foreground truncate">{item.name}</span>
+															<span className="text-[10px] text-muted-foreground whitespace-normal break-words">{item.name}</span>
 														</div>
 														<Badge variant="outline" className="text-[10px] shrink-0">
 															Qty {item.quantity}
