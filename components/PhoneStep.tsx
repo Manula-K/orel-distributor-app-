@@ -26,13 +26,13 @@ export default function PhoneStep({ phoneNumber, onPhoneChange, error, loading, 
 				<CardDescription>We'll send you a verification code</CardDescription>
 			</CardHeader>
 			<CardContent className="pt-0 space-y-3">
-				<div className="">
+				<div className="space-y-2">
 					<Label htmlFor="phone">Phone Number</Label>
 					<Input
 						id="phone"
 						type="tel"
 						inputMode="numeric"
-						placeholder="+94771234567"
+						placeholder="XXX"
 						value={phoneNumber}
 						onChange={(e) => onPhoneChange(e.target.value)}
 						maxLength={12}
