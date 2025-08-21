@@ -9,7 +9,7 @@ function OtpPageContent() {
 	const router = useRouter();
 	const params = useSearchParams();
 	const phoneFromQuery = params.get("phone");
-	const [phoneNumber, setPhoneNumber] = useState<string>("+94");
+	const [phoneNumber, setPhoneNumber] = useState<string>("");
 	const [otp, setOtp] = useState(["", "", "", ""]);
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);

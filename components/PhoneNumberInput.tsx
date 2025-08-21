@@ -16,6 +16,16 @@ interface PhoneStepProps {
 }
 
 export default function PhoneStep({ phoneNumber, onPhoneChange, error, loading, onSendOTP }: PhoneStepProps) {
+	const handlePhoneChange = (value: string) => {
+		// Remove all non-digit characters
+		const digitsOnly = value.replace(/\D/g, "");
+
+		// Limit to maximum 10 digits
+		if (digitsOnly.length <= 10) {
+			onPhoneChange(value);
+		}
+	};
+
 	return (
 		<Card>
 			<CardHeader className="text-center ">
@@ -32,10 +42,10 @@ export default function PhoneStep({ phoneNumber, onPhoneChange, error, loading, 
 						id="phone"
 						type="tel"
 						inputMode="numeric"
-						placeholder="XXX"
+						placeholder="071 999 1761"
 						value={phoneNumber}
-						onChange={(e) => onPhoneChange(e.target.value)}
-						maxLength={12}
+						onChange={(e) => handlePhoneChange(e.target.value)}
+						maxLength={13}
 						className="text-lg"
 					/>
 				</div>
@@ -48,7 +58,7 @@ export default function PhoneStep({ phoneNumber, onPhoneChange, error, loading, 
 
 				<LoadingButton
 					onClick={onSendOTP}
-					disabled={phoneNumber.length < 12}
+					disabled={phoneNumber.replace(/\D/g, "").length !== 10}
 					className="w-full"
 					size="lg"
 					loading={loading}

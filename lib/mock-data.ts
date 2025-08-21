@@ -6,7 +6,7 @@ export const MOCK_DISTRIBUTOR: DistributorProfile = {
 	region: "Western Province",
 	contactPerson: "Kasun Perera",
 	email: "kasun.perera@abcdistributors.lk",
-	phone: "+94 77 123 4567",
+	phone: "077 123 4567",
 };
 
 export const ORDER_HISTORY: InvoiceData[] = [

@@ -19,18 +19,3 @@ export const formatFriendlyDateTime = (iso: string) => {
 
 	return `${day} ${month} ${year} ${hours}.${minutes} ${ampm}`;
 };
-
-// Always enforce Sri Lankan format: "+94" followed by up to 9 digits.
-export const normalizeSriLankaPhone = (rawInput: string) => {
-	const digitsOnly = rawInput.replace(/\D/g, "");
-	let nationalPart = "";
-	if (digitsOnly.startsWith("94")) {
-		nationalPart = digitsOnly.slice(2);
-	} else if (digitsOnly.startsWith("0")) {
-		nationalPart = digitsOnly.slice(1);
-	} else {
-		nationalPart = digitsOnly;
-	}
-	nationalPart = nationalPart.slice(0, 9);
-	return "+94" + nationalPart;
-};
