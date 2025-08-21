@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import PhoneStep from "@/components/PhoneStep";
+import PhoneNumberInput from "@/components/PhoneNumberInput";
 import { normalizeSriLankaPhone } from "@/lib/format";
 
 export default function AuthPage() {
@@ -35,7 +35,7 @@ export default function AuthPage() {
 	return (
 		<div className="min-h-screen bg-background flex items-center justify-center">
 			<div className="w-full max-w-md mx-auto px-4 space-y-6">
-				<PhoneStep
+				<PhoneNumberInput
 					phoneNumber={phoneNumber}
 					onPhoneChange={(value) => setPhoneNumber(normalizeSriLankaPhone(value))}
 					error={error}

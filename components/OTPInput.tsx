@@ -9,7 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Clock, RefreshCw, Shield } from "lucide-react";
 import { useRef } from "react";
 
-interface OtpStepProps {
+interface OTPInputProps {
 	phoneNumber: string;
 	otp: string[];
 	error: string;
@@ -22,7 +22,18 @@ interface OtpStepProps {
 	onOtpChange: (index: number, value: string) => void;
 }
 
-export default function OtpStep({ phoneNumber, otp, error, loading, otpAttempts, countdown, onVerify, onResend, onBack, onOtpChange }: OtpStepProps) {
+export default function OTPInput({
+	phoneNumber,
+	otp,
+	error,
+	loading,
+	otpAttempts,
+	countdown,
+	onVerify,
+	onResend,
+	onBack,
+	onOtpChange,
+}: OTPInputProps) {
 	const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
 	const handleChange = (index: number, value: string) => {

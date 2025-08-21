@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import OtpStep from "@/components/OtpStep";
+import OTPInput from "@/components/OTPInput";
 
 function OtpPageContent() {
 	const router = useRouter();
@@ -60,7 +60,7 @@ function OtpPageContent() {
 	return (
 		<div className="min-h-screen bg-background flex items-center justify-center">
 			<div className="w-full max-w-md mx-auto px-4 space-y-6">
-				<OtpStep
+				<OTPInput
 					phoneNumber={phoneNumber}
 					otp={otp}
 					error={error}

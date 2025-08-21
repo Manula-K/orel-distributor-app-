@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import OrderDetailStep from "@/components/OrderDetailStep";
+import OrderDetailStep from "@/components/OrderDetails";
 import { ORDER_HISTORY } from "@/lib/mock-data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 

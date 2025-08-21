@@ -1,12 +1,19 @@
 import type { Metadata } from "next";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
+const inter = Inter({
+	subsets: ["latin"],
+	variable: "--font-inter",
+	display: "swap",
+	preload: true,
+	fallback: ["system-ui", "arial"],
+});
+
 export const metadata: Metadata = {
-	title: "v0 App",
-	description: "Created with v0",
-	generator: "v0.app",
+	title: "Orel Distributor Portal",
+	description: "Orel Distributor Portal for managing orders and deliveries",
+	generator: "Orel Distributor Portal by Orel",
 };
 
 export default function RootLayout({
@@ -15,18 +22,11 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning className={inter.variable}>
 			<head>
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
-				<style>{`
-html {
-  font-family: ${GeistSans.style.fontFamily};
-  --font-sans: ${GeistSans.variable};
-  --font-mono: ${GeistMono.variable};
-}
-        `}</style>
 			</head>
-			<body>{children}</body>
+			<body className={inter.className}>{children}</body>
 		</html>
 	);
 }

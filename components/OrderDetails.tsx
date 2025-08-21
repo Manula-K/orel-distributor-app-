@@ -24,14 +24,14 @@ import type { InvoiceData } from "@/types/invoice";
 import { formatCurrency, formatFriendlyDateTime } from "@/lib/format";
 import { useState } from "react";
 
-interface OrderDetailStepProps {
+interface OrderDetailsProps {
 	invoiceData: InvoiceData;
 	loading: boolean;
 	onBack: () => void;
 	onAcceptOrder: () => void;
 }
 
-export default function OrderDetailStep({ invoiceData, loading, onBack, onAcceptOrder }: OrderDetailStepProps) {
+export default function OrderDetails({ invoiceData, loading, onBack, onAcceptOrder }: OrderDetailsProps) {
 	const [itemsExpanded, setItemsExpanded] = useState(true);
 	return (
 		<div className="space-y-4 pb-32">

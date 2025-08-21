@@ -12,7 +12,7 @@ import type { DistributorProfile, InvoiceData } from "@/types/invoice";
 import { formatCurrency, formatFriendlyDateTime } from "@/lib/format";
 import { useRouter } from "next/navigation";
 
-interface OrdersStepProps {
+interface MyOrdersProps {
 	distributor: DistributorProfile | null;
 	selectedYear: string;
 	setSelectedYear: (v: string) => void;
@@ -25,7 +25,7 @@ interface OrdersStepProps {
 	onLogout: () => void;
 }
 
-export default function OrdersStep({
+export default function MyOrders({
 	distributor,
 	selectedYear,
 	setSelectedYear,
@@ -36,7 +36,7 @@ export default function OrdersStep({
 	filteredOrders,
 	onViewOrderDetail,
 	onLogout,
-}: OrdersStepProps) {
+}: MyOrdersProps) {
 	const router = useRouter();
 	return (
 		<div className="space-y-4">

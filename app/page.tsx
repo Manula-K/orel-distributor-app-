@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import OrdersStep from "@/components/OrdersStep";
+import OrdersStep from "@/components/MyOrders";
 import { ORDER_HISTORY, MOCK_DISTRIBUTOR } from "@/lib/mock-data";
 import type { DistributorProfile, InvoiceData } from "@/types/invoice";
 
