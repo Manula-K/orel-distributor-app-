@@ -6,7 +6,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Package, ChevronLeft, RefreshCw, CheckCircle, Calendar, Clock, ChevronDown, ChevronUp } from "lucide-react";
+import {
+	Package,
+	ChevronLeft,
+	RefreshCw,
+	CheckCircle,
+	Calendar,
+	Clock,
+	ChevronDown,
+	ChevronUp,
+	ShoppingBag,
+	Warehouse,
+	Truck,
+	MapPin,
+} from "lucide-react";
 import type { InvoiceData } from "@/types/invoice";
 import { formatCurrency, formatFriendlyDateTime } from "@/lib/format";
 import { useState } from "react";
@@ -122,6 +135,107 @@ export default function OrderDetailStep({ invoiceData, loading, onBack, onAccept
 						))}
 					</CardContent>
 				)}
+			</Card>
+
+			<Card>
+				<CardHeader className="pb-0">
+					<div className="flex items-center justify-between">
+						<CardTitle className="text-lg flex items-center gap-2">
+							<Clock className="w-5 h-5" />
+							Timeline
+						</CardTitle>
+						<Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700 border-blue-200">
+							<CheckCircle className="w-3 h-3 mr-1" />
+							In Progress
+						</Badge>
+					</div>
+				</CardHeader>
+				<CardContent className="pt-0">
+					<div className="space-y-4">
+						{/* Order Confirmed */}
+						<div className="flex items-start gap-3">
+							<div className="relative">
+								<div className="w-8 h-8 rounded-full bg-muted border-2 border-muted-foreground/20 flex items-center justify-center">
+									<ShoppingBag className="w-4 h-4 text-muted-foreground" />
+								</div>
+								<div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-0.5 h-4 bg-dashed border-l border-muted-foreground/30"></div>
+							</div>
+							<div className="flex-1 min-w-0">
+								<div className="flex items-center justify-between">
+									<div>
+										<p className="font-semibold text-sm">Order Confirmed</p>
+										<p className="text-xs text-muted-foreground">Order placed and confirmed</p>
+									</div>
+									<span className="text-xs text-muted-foreground">
+										{new Date(invoiceData.invoiceDate).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
+									</span>
+								</div>
+							</div>
+						</div>
+
+						{/* Shipping */}
+						<div className="flex items-start gap-3">
+							<div className="relative">
+								<div className="w-8 h-8 rounded-full bg-muted border-2 border-muted-foreground/20 flex items-center justify-center">
+									<Warehouse className="w-4 h-4 text-muted-foreground" />
+								</div>
+								<div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-0.5 h-4 bg-dashed border-l border-muted-foreground/30"></div>
+							</div>
+							<div className="flex-1 min-w-0">
+								<div className="flex items-center justify-between">
+									<div>
+										<p className="font-semibold text-sm">Shipping</p>
+										<p className="text-xs text-muted-foreground">Order prepared for shipping</p>
+									</div>
+									<span className="text-xs text-muted-foreground">
+										{new Date(invoiceData.invoiceDate).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
+									</span>
+								</div>
+							</div>
+						</div>
+
+						{/* Transit */}
+						<div className="flex items-start gap-3">
+							<div className="relative">
+								<div className="w-8 h-8 rounded-full bg-muted border-2 border-muted-foreground/20 flex items-center justify-center">
+									<Truck className="w-4 h-4 text-muted-foreground" />
+								</div>
+								<div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-0.5 h-4 bg-dashed border-l border-muted-foreground/30"></div>
+							</div>
+							<div className="flex-1 min-w-0">
+								<div className="flex items-center justify-between">
+									<div>
+										<p className="font-semibold text-sm">Transit</p>
+										<p className="text-xs text-muted-foreground">Order in transit to destination</p>
+									</div>
+									<span className="text-xs text-muted-foreground">
+										{new Date(invoiceData.invoiceDate).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
+									</span>
+								</div>
+							</div>
+						</div>
+
+						{/* Sent to Customer */}
+						<div className="flex items-start gap-3">
+							<div className="relative">
+								<div className="w-8 h-8 rounded-full bg-muted border-2 border-muted-foreground/20 flex items-center justify-center">
+									<MapPin className="w-4 h-4 text-muted-foreground" />
+								</div>
+							</div>
+							<div className="flex-1 min-w-0">
+								<div className="flex items-center justify-between">
+									<div>
+										<p className="font-semibold text-sm">Sent to Customer</p>
+										<p className="text-xs text-muted-foreground">Order delivered to customer</p>
+									</div>
+									<span className="text-xs text-muted-foreground">
+										{new Date(invoiceData.invoiceDate).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</CardContent>
 			</Card>
 
 			<Card>
