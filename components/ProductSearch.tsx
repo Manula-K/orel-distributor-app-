@@ -12,7 +12,7 @@ interface ProductSearchProps {
 	className?: string;
 }
 
-export function ProductSearch({ onSearch, placeholder = "Search products by name, SKU, or description...", className }: ProductSearchProps) {
+export function ProductSearch({ onSearch, placeholder = "Search products by name, SKU", className }: ProductSearchProps) {
 	const [query, setQuery] = useState("");
 
 	useEffect(() => {
@@ -31,7 +31,13 @@ export function ProductSearch({ onSearch, placeholder = "Search products by name
 	return (
 		<div className={cn("relative w-full", className)}>
 			<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-			<Input type="text" placeholder={placeholder} value={query} onChange={(e) => setQuery(e.target.value)} className="pl-10 pr-10" />
+			<Input
+				type="text"
+				placeholder={placeholder}
+				value={query}
+				onChange={(e) => setQuery(e.target.value)}
+				className="pl-10 pr-10 placeholder:text-sm"
+			/>
 			{query && (
 				<Button
 					variant="ghost"

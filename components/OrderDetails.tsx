@@ -110,9 +110,9 @@ export default function OrderDetails({ invoiceData, loading, onBack, onAcceptOrd
 				}
 			/>
 			<div className="pb-32">
-				<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+				<div className="flex flex-col lg:grid lg:grid-cols-2 gap-3 lg:gap-4">
 					{/* Left column: all details except items */}
-					<div className="space-y-4">
+					<div className="order-1 lg:order-none space-y-3 lg:space-y-4">
 						<Card className="gap-0">
 							<CardHeader className="pb-2 px-4">
 								<CardTitle className="text-base flex items-center gap-2">
@@ -152,8 +152,8 @@ export default function OrderDetails({ invoiceData, loading, onBack, onAcceptOrd
 							</CardContent>
 						</Card>
 
-						<Card>
-							<CardHeader className="pb-0">
+						<Card className="hidden lg:block">
+							<CardHeader className="pb-4">
 								<div className="flex items-center justify-between">
 									<CardTitle className="text-base flex items-center gap-2">
 										<Clock className="w-4 h-4" />
@@ -188,7 +188,7 @@ export default function OrderDetails({ invoiceData, loading, onBack, onAcceptOrd
 							</CardContent>
 						</Card>
 
-						<Card>
+						<Card className="hidden lg:block">
 							<CardHeader className="pb-0">
 								<CardTitle className="text-base flex items-center gap-2">
 									<FileText className="w-4 h-4" />
@@ -217,8 +217,8 @@ export default function OrderDetails({ invoiceData, loading, onBack, onAcceptOrd
 					</div>
 
 					{/* Right column: Order Items */}
-					<div className="space-y-4">
-						<Card>
+					<div className="order-2 lg:order-none">
+						<Card className="hidden lg:block lg:mt-0">
 							<CardHeader className="pb-0">
 								<div className="flex items-center justify-between">
 									<CardTitle className="text-base flex items-center gap-2">
@@ -280,6 +280,137 @@ export default function OrderDetails({ invoiceData, loading, onBack, onAcceptOrd
 							)}
 						</Card>
 					</div>
+				</div>
+
+				{/* Mobile-only cards container */}
+				<div className="block lg:hidden space-y-3">
+					{/* Mobile-only Order Items */}
+					<Card className="order-2">
+						<CardHeader className="pb-0">
+							<div className="flex items-center justify-between">
+								<CardTitle className="text-base flex items-center gap-2">
+									<Package className="w-4 h-4" />
+									Order Items ({itemsCount})
+								</CardTitle>
+								<Button
+									variant="ghost"
+									size="icon"
+									aria-label={itemsExpanded ? "Collapse items" : "Expand items"}
+									onClick={() => setItemsExpanded((v) => !v)}
+									className="shrink-0"
+								>
+									{itemsExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+								</Button>
+							</div>
+						</CardHeader>
+						{itemsExpanded && (
+							<CardContent className="pt-0">
+								{invoiceData.items.map((item, index) => (
+									<div key={item.id} className={index === 0 ? "pt-0 pb-4" : "py-4"}>
+										<div className="flex items-start gap-3">
+											<Image
+												src={item.imageUrl || "/placeholder.jpg"}
+												alt={item.name}
+												width={35}
+												height={35}
+												className="rounded-md border bg-muted shrink-0"
+											/>
+											<div className="min-w-0 flex-1">
+												<div className="flex items-center justify-between gap-2">
+													<div className="flex flex-col items-start gap-1 min-w-0">
+														<p className="text-sm font-semibold leading-snug truncate">{item.sku}</p>
+														<span className="text-[10px] text-muted-foreground whitespace-normal break-words">{item.name}</span>
+													</div>
+													<Badge variant="outline" className="text-[10px] shrink-0">
+														Qty {item.quantity}
+													</Badge>
+												</div>
+												<div className="mt-2 flex items-center justify-between gap-4 text-[10px]">
+													<div className="flex items-center gap-1.5">
+														<span className="text-muted-foreground ">Unit Price</span>
+														<span className="font-bold text-primary">{formatCurrency(item.unitPrice)}</span>
+													</div>
+
+													<div className="flex items-center gap-1.5">
+														<span className="text-muted-foreground">Total</span>
+														<span className="font-medium">{formatCurrency(item.lineTotal)}</span>
+													</div>
+												</div>
+											</div>
+										</div>
+										{index < invoiceData.items.length - 1 && (
+											<Separator className="mx-0 my-2 h-[1.5px] bg-gradient-to-r from-transparent via-border/70 to-transparent rounded-full" />
+										)}
+									</div>
+								))}
+							</CardContent>
+						)}
+					</Card>
+
+					{/* Mobile-only Summary */}
+					<Card className="order-3">
+						<CardHeader className="pb-0">
+							<CardTitle className="text-base flex items-center gap-2">
+								<FileText className="w-4 h-4" />
+								Summary
+							</CardTitle>
+						</CardHeader>
+						<CardContent className="pt-6">
+							<div className="space-y-4">
+								<div className="flex justify-between text-sm">
+									<span className="text-muted-foreground">Subtotal</span>
+									<span className="font-medium">{formatCurrency(invoiceData.subtotal)}</span>
+								</div>
+								<div className="flex justify-between text-sm">
+									<span className="text-muted-foreground">Discount (30%)</span>
+									<span className="text-green-600 font-medium">-{formatCurrency(invoiceData.totalDiscount)}</span>
+								</div>
+								<div className="border-t pt-4">
+									<div className="flex justify-between text-base font-bold">
+										<span>Order Total</span>
+										<span className="text-primary">{formatCurrency(invoiceData.orderTotal)}</span>
+									</div>
+								</div>
+							</div>
+						</CardContent>
+					</Card>
+
+					{/* Mobile-only Timeline (after Summary) */}
+					<Card className="order-4">
+						<CardHeader className="pb-4">
+							<div className="flex items-center justify-between">
+								<CardTitle className="text-base flex items-center gap-2">
+									<Clock className="w-4 h-4" />
+									Timeline
+								</CardTitle>
+							</div>
+						</CardHeader>
+						<CardContent className="pt-0">
+							<div className="space-y-4">
+								{timelineSteps.map(({ title, subtitle, Icon }, index) => (
+									<div key={title} className="flex items-start gap-3">
+										<div className="relative">
+											<div className="w-8 h-8 rounded-full bg-muted border-2 border-muted-foreground/20 flex items-center justify-center">
+												<Icon className="w-4 h-4 text-muted-foreground" />
+											</div>
+											{index < timelineSteps.length - 1 && (
+												<div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-0.5 h-4 bg-dashed border-l border-muted-foreground/30"></div>
+											)}
+										</div>
+										<div className="flex-1 min-w-0">
+											<div className="flex items-center justify-between">
+												<div>
+													<p className="font-semibold text-sm">{title}</p>
+													<p className="text-xs text-muted-foreground">{subtitle}</p>
+												</div>
+												<span className="text-xs text-muted-foreground">{dateOnly}</span>
+											</div>
+										</div>
+									</div>
+								))}
+							</div>
+						</CardContent>
+					</Card>
 				</div>
 
 				{/* Accept Order button moved to header row in app/[id]/page.tsx */}

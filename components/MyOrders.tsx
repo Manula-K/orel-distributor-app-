@@ -45,8 +45,8 @@ export default function MyOrders({
 	const router = useRouter();
 	return (
 		<div className="space-y-4 lg:space-y-6">
-			<div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
-				<div className="lg:col-span-2 space-y-4">
+			<div className="flex flex-col lg:grid lg:grid-cols-3 gap-3 lg:gap-6">
+				<div className="order-2 lg:order-none lg:col-span-2 space-y-3 lg:space-y-4">
 					<Card className="gap-3">
 						<CardHeader className="px-4 overflow-x-hidden">
 							<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -58,10 +58,10 @@ export default function MyOrders({
 						</CardHeader>
 						<CardContent className="pt-0 px-4 space-y-3 overflow-x-hidden">
 							<div className="flex flex-wrap items-end gap-3">
-								<div className="flex-[2] min-w-[12rem]">
+								{/* <div className="flex-[2] min-w-[12rem]">
 									<Label className="text-[11px] font-medium text-muted-foreground mb-1 block">Search</Label>
 									<Input value={keyword} onChange={(e) => setKeyword(e.target.value)} placeholder="Search orders..." className="h-8 text-sm" />
-								</div>
+								</div> */}
 								<div className="flex-1 min-w-[7rem]">
 									<Label className="text-[11px] font-medium text-muted-foreground mb-1 block">Filter by Year</Label>
 									<Select value={selectedYear} onValueChange={(v) => setSelectedYear(v)}>
@@ -173,8 +173,27 @@ export default function MyOrders({
 						</Card>
 					)}
 				</div>
+
+				{/* Mobile-only Description (after orders) */}
 				{distributor && (
-					<div className="lg:col-span-1">
+					<Card className="gap-0 block lg:hidden order-3">
+						<CardHeader className="pb-2 px-4">
+							<CardTitle className="text-base flex items-center gap-2">
+								<Info className="w-4 h-4" />
+								Description
+							</CardTitle>
+						</CardHeader>
+						<CardContent className="pt-0 px-4">
+							<p className="text-sm text-muted-foreground">
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor tempor incididunt ut labore et dolore magna aliqua.
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor tempor incididunt ut labore et dolore magna
+								aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor tempor incididunt ut labore et dolore magna
+							</p>
+						</CardContent>
+					</Card>
+				)}
+				{distributor && (
+					<div className="order-1 lg:order-none lg:col-span-1">
 						<Card className="gap-0">
 							<CardHeader className="pb-2 px-4">
 								<CardTitle className="text-base flex items-center gap-2">
@@ -220,7 +239,7 @@ export default function MyOrders({
 							</CardContent>
 						</Card>
 
-						<Card className="gap-0 mt-4">
+						<Card className="gap-0 mt-4 hidden lg:block">
 							<CardHeader className="pb-2 px-4">
 								<CardTitle className="text-base flex items-center gap-2">
 									<Info className="w-4 h-4" />

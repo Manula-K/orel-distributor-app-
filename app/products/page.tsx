@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import TopBar from "@/components/TopBar";
 import { ProductCard } from "@/components/ProductCard";
 import { CategoryFilter } from "@/components/CategoryFilter";
@@ -12,13 +12,24 @@ import { X, Package } from "lucide-react";
 import { CATEGORIES, PRODUCTS, getProductsByCategory, searchProducts } from "@/lib/product-data";
 import { useCart } from "@/contexts/CartContext";
 import { cn } from "@/lib/utils";
+import { LoadingOverlay } from "@/components/ui/loading-overlay";
 
 // view mode removed
 
 export default function ProductsPage() {
 	const [selectedCategory, setSelectedCategory] = useState("all");
 	const [searchQuery, setSearchQuery] = useState("");
+	const [isLoading, setIsLoading] = useState(true);
 	const { getTotalItems, getTotalPrice } = useCart();
+
+	useEffect(() => {
+		// Simulate loading time for products data
+		const timer = setTimeout(() => {
+			setIsLoading(false);
+		}, 800);
+
+		return () => clearTimeout(timer);
+	}, []);
 
 	// Filter products based on category and search
 	const filteredProducts = useMemo(() => {
@@ -41,43 +52,45 @@ export default function ProductsPage() {
 
 	return (
 		<div className="min-h-screen bg-background overflow-x-hidden">
-			<TopBar subtitle="Products" />
+			<TopBar subtitle="Placed Your Order" />
 			<div className="pt-16" />
 
-			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-10">
-				{/* Category Filter */}
-				<div className="mb-2">
-					<CategoryFilter categories={CATEGORIES} selectedCategory={selectedCategory} onCategoryChange={setSelectedCategory} />
-				</div>
-
-				<ProductSearch onSearch={setSearchQuery} className="mb-4" />
-
-				{/* Products Grid */}
-				{filteredProducts.length > 0 ? (
-					<div className={cn("grid gap-3", "grid-cols-2 sm:grid-cols-2 lg:grid-cols-5")}>
-						{filteredProducts.map((product) => (
-							<ProductCard key={product.id} product={product} />
-						))}
+			<LoadingOverlay isLoading={isLoading} text="Loading products..." spinnerSize="lg">
+				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-10">
+					{/* Category Filter */}
+					<div className="mb-2">
+						<CategoryFilter categories={CATEGORIES} selectedCategory={selectedCategory} onCategoryChange={setSelectedCategory} />
 					</div>
-				) : (
-					<div className="text-center py-12">
-						<div className="mx-auto w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-4">
-							<Package className="h-8 w-8 text-muted-foreground" />
+
+					<ProductSearch onSearch={setSearchQuery} className="mb-4" />
+
+					{/* Products Grid */}
+					{filteredProducts.length > 0 ? (
+						<div className={cn("grid gap-3", "grid-cols-2 sm:grid-cols-2 lg:grid-cols-5")}>
+							{filteredProducts.map((product) => (
+								<ProductCard key={product.id} product={product} />
+							))}
 						</div>
-						<h3 className="text-lg font-semibold mb-2">No products found</h3>
-						<p className="text-muted-foreground mb-4">Try adjusting your search or filter criteria</p>
-						<Button
-							variant="outline"
-							onClick={() => {
-								setSelectedCategory("all");
-								setSearchQuery("");
-							}}
-						>
-							Clear all filters
-						</Button>
-					</div>
-				)}
-			</div>
+					) : (
+						<div className="text-center py-12">
+							<div className="mx-auto w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-4">
+								<Package className="h-8 w-8 text-muted-foreground" />
+							</div>
+							<h3 className="text-lg font-semibold mb-2">No products found</h3>
+							<p className="text-muted-foreground mb-4">Try adjusting your search or filter criteria</p>
+							<Button
+								variant="outline"
+								onClick={() => {
+									setSelectedCategory("all");
+									setSearchQuery("");
+								}}
+							>
+								Clear all filters
+							</Button>
+						</div>
+					)}
+				</div>
+			</LoadingOverlay>
 		</div>
 	);
 }
