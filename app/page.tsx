@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import OrdersStep from "@/components/MyOrders";
+import MyOrders from "@/components/MyOrders";
 import { ORDER_HISTORY, MOCK_DISTRIBUTOR } from "@/lib/mock-data";
 import type { DistributorProfile, InvoiceData } from "@/types/invoice";
 import { LoadingOverlay } from "@/components/ui/loading-overlay";
+import { getUniqueMonthNames, getUniqueYears, splitMonthYear } from "@/lib/utils";
 
 export default function HomePage() {
 	const [selectedMonth, setSelectedMonth] = useState("all");
@@ -16,28 +17,23 @@ export default function HomePage() {
 
 	const filteredOrders = useMemo(() => {
 		return orderHistory.filter((order) => {
-			const orderYear = order.month.split(" ")[1];
-			const orderMonthName = order.month.split(" ")[0];
-			const matchesYear = selectedYear === "all" || orderYear === selectedYear;
-			const matchesMonth = selectedMonth === "all" || orderMonthName === selectedMonth;
+			const { year, monthName } = splitMonthYear(order.month);
+			const matchesYear = selectedYear === "all" || year === selectedYear;
+			const matchesMonth = selectedMonth === "all" || monthName === selectedMonth;
 			return matchesMonth && matchesYear;
 		});
 	}, [orderHistory, selectedMonth, selectedYear]);
 
-	const uniqueYears = useMemo(() => Array.from(new Set(orderHistory.map((o) => o.month.split(" ")[1]))), [orderHistory]);
-	const uniqueMonthNames = useMemo(
-		() =>
-			selectedYear === "all"
-				? Array.from(new Set(orderHistory.map((o) => o.month.split(" ")[0])))
-				: Array.from(new Set(orderHistory.filter((o) => o.month.split(" ")[1] === selectedYear).map((o) => o.month.split(" ")[0]))),
-		[selectedYear, orderHistory]
-	);
+	const uniqueYears = useMemo(() => getUniqueYears(orderHistory), [orderHistory]);
+	const uniqueMonthNames = useMemo(() => getUniqueMonthNames(orderHistory, selectedYear), [orderHistory, selectedYear]);
 
 	useEffect(() => {
 		if (selectedYear === "all") return;
-		const availableMonths = new Set(orderHistory.filter((o) => o.month.split(" ")[1] === selectedYear).map((o) => o.month.split(" ")[0]));
+		const availableMonths = new Set(
+			orderHistory.filter((o) => splitMonthYear(o.month).year === selectedYear).map((o) => splitMonthYear(o.month).monthName)
+		);
 		if (selectedMonth !== "all" && !availableMonths.has(selectedMonth)) setSelectedMonth("all");
-	}, [selectedYear]);
+	}, [selectedYear, selectedMonth, orderHistory]);
 
 	useEffect(() => {
 		// Simulate initial loading
@@ -49,7 +45,7 @@ export default function HomePage() {
 		<div className="min-h-screen bg-background">
 			<LoadingOverlay isLoading={isLoading} text="Loading orders..." spinnerSize="lg">
 				<div className="max-w-md mx-auto px-4 py-6">
-					<OrdersStep
+					<MyOrders
 						distributor={distributor}
 						selectedYear={selectedYear}
 						setSelectedYear={(v) => setSelectedYear(v)}
@@ -58,8 +54,6 @@ export default function HomePage() {
 						uniqueYears={uniqueYears}
 						uniqueMonthNames={uniqueMonthNames}
 						filteredOrders={filteredOrders}
-						onViewOrderDetail={() => {}}
-						onLogout={() => {}}
 						isLoading={isLoading}
 					/>
 				</div>

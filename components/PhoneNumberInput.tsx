@@ -16,14 +16,23 @@ interface PhoneStepProps {
 }
 
 export default function PhoneStep({ phoneNumber, onPhoneChange, error, loading, onSendOTP }: PhoneStepProps) {
-	const handlePhoneChange = (value: string) => {
-		// Remove all non-digit characters
-		const digitsOnly = value.replace(/\D/g, "");
+	const formatSriLankaMobile = (input: string) => {
+		const digits = input.replace(/\D/g, "").slice(0, 10);
+		if (digits.length <= 3) return digits;
+		if (digits.length <= 6) return `${digits.slice(0, 3)} ${digits.slice(3)}`;
+		return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+	};
 
-		// Limit to maximum 10 digits
-		if (digitsOnly.length <= 10) {
-			onPhoneChange(value);
-		}
+	const handlePhoneChange = (value: string) => {
+		// Sanitize and format as 07X XXX XXXX
+		const formatted = formatSriLankaMobile(value);
+		onPhoneChange(formatted);
+	};
+
+	const handlePaste: React.ClipboardEventHandler<HTMLInputElement> = (e) => {
+		e.preventDefault();
+		const pasted = e.clipboardData.getData("text");
+		onPhoneChange(formatSriLankaMobile(pasted));
 	};
 
 	return (
@@ -42,10 +51,15 @@ export default function PhoneStep({ phoneNumber, onPhoneChange, error, loading, 
 						id="phone"
 						type="tel"
 						inputMode="numeric"
-						placeholder="071 999 1761"
+						placeholder="07X XXX XXXX"
 						value={phoneNumber}
 						onChange={(e) => handlePhoneChange(e.target.value)}
-						maxLength={13}
+						maxLength={12}
+						autoComplete="tel-national"
+						pattern="[0-9 ]*"
+						onPaste={handlePaste}
+						aria-label="Phone number"
+						aria-invalid={Boolean(error) || undefined}
 						className="text-lg"
 					/>
 				</div>

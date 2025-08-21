@@ -10,7 +10,8 @@ function OtpPageContent() {
 	const params = useSearchParams();
 	const phoneFromQuery = params.get("phone");
 	const [phoneNumber, setPhoneNumber] = useState<string>("");
-	const [otp, setOtp] = useState(["", "", "", ""]);
+	const OTP_LENGTH = 4;
+	const [otp, setOtp] = useState<string[]>(Array.from({ length: OTP_LENGTH }, () => ""));
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [otpAttempts, setOtpAttempts] = useState(0);
@@ -44,8 +45,8 @@ function OtpPageContent() {
 	const verifyOTP = async () => {
 		setLoading(true);
 		setError("");
-		const otpString = otp.join("");
-		if (otpString.length !== 4) {
+		const isComplete = otp.every(Boolean);
+		if (!isComplete) {
 			setError("Please enter a 4-digit OTP");
 			setLoading(false);
 			return;
@@ -80,9 +81,9 @@ function OtpPageContent() {
 						onResend={resendOTP}
 						onBack={() => router.push("/auth")}
 						onOtpChange={(index, value) => {
-							if (value.length > 1) return;
+							const sanitized = value.replace(/\D/g, "").slice(0, 1);
 							const next = [...otp];
-							next[index] = value;
+							next[index] = sanitized;
 							setOtp(next);
 						}}
 					/>

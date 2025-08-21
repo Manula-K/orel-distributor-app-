@@ -7,7 +7,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ChevronRight, Filter, LogOut, Package, Calendar, Clock } from "lucide-react";
+import { ChevronRight, Filter, LogOut, Package, Calendar } from "lucide-react";
 import type { DistributorProfile, InvoiceData } from "@/types/invoice";
 import { formatCurrency, formatFriendlyDateTime } from "@/lib/format";
 import { useRouter } from "next/navigation";
@@ -22,8 +22,6 @@ interface MyOrdersProps {
 	uniqueYears: string[];
 	uniqueMonthNames: string[];
 	filteredOrders: InvoiceData[];
-	onViewOrderDetail: (order: InvoiceData) => void;
-	onLogout: () => void;
 	isLoading?: boolean;
 }
 
@@ -36,8 +34,6 @@ export default function MyOrders({
 	uniqueYears,
 	uniqueMonthNames,
 	filteredOrders,
-	onViewOrderDetail,
-	onLogout,
 	isLoading = false,
 }: MyOrdersProps) {
 	const router = useRouter();
