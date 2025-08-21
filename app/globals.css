@@ -80,4 +80,48 @@
 	* {
 		@apply border-border outline-ring/50;
 	}
+
+	html,
+	body {
+		@apply max-w-full overflow-x-hidden;
+	}
+
+	img,
+	svg,
+	canvas,
+	video,
+	iframe {
+		max-width: 100%;
+		height: auto;
+	}
+
+	/* Prevent long strings from forcing overflow */
+	:is(p, span, a, div) {
+		word-break: break-word;
+		overflow-wrap: anywhere;
+	}
+}
+
+@layer utilities {
+	/* Line clamp utilities for text truncation */
+	.line-clamp-1 {
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 1;
+	}
+
+	.line-clamp-2 {
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+	}
+
+	.line-clamp-3 {
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+	}
 }

@@ -132,7 +132,7 @@ export default function OTPInput({
 			<CardContent className="pt-0 space-y-4">
 				<div className="space-y-2">
 					<Label>Verification Code</Label>
-					<div className="flex justify-center space-x-3">
+					<div className="flex justify-center gap-2 sm:gap-3">
 						{otp.map((digit, index) => (
 							<Input
 								key={index}
@@ -149,7 +149,7 @@ export default function OTPInput({
 								onKeyDown={(e) => handleKeyDown(index, e)}
 								onPaste={(e) => handlePaste(index, e)}
 								onFocus={() => handleFocus(index)}
-								className="w-12 h-12 text-center text-xl font-bold"
+								className="w-10 h-10 sm:w-12 sm:h-12 text-center text-xl font-bold"
 								aria-label={`OTP Digit ${index + 1}`}
 								aria-invalid={Boolean(error) || undefined}
 							/>
