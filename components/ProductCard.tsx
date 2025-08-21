@@ -44,26 +44,24 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
 	return (
 		<Card className={cn("group hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col h-full", className)}>
-			<CardHeader className="p-2 pb-1 flex-shrink-0">
-				<div className="relative overflow-hidden rounded-lg" style={{ aspectRatio: "4 / 3" }}>
+			<CardHeader className="pb-1 flex-shrink-0">
+				<div className="relative overflow-hidden rounded-lg" style={{ aspectRatio: "4 / 4" }}>
 					<Image
 						src={product.image || "/placeholder-logo.png"}
 						alt={product.name}
 						fill
 						className="object-contain transition-transform duration-300 group-hover:scale-105"
-						sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 					/>
-					{/* Stock tag removed as requested */}
 				</div>
 			</CardHeader>
 
-			<CardContent className="px-3 space-y-1.5 flex-1 flex flex-col">
+			<CardContent className="px-3 flex-1 flex flex-col">
 				<div className="space-y-1.5 flex-1">
 					{/* Show SKU like title */}
 					<h3 className="font-semibold text-sm leading-tight line-clamp-1 group-hover:text-primary transition-colors">{product.sku}</h3>
 					{/* Show product name as muted sub description (two lines with ellipsis) */}
-					<p className="text-xs text-muted-foreground line-clamp-2 min-h-[2rem]">{product.name}</p>
-					<p className="text-md font-bold text-primary">LKR {product.price.toLocaleString()}</p>
+					<p className="text-[10px] text-muted-foreground line-clamp-2 min-h-[1rem]">{product.name}</p>
+					<p className="text-sm font-bold text-primary">LKR {product.price.toLocaleString()}</p>
 				</div>
 			</CardContent>
 

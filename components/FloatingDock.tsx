@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { useCart } from "@/contexts/CartContext";
 
 const dockItems = [
@@ -18,28 +17,12 @@ const dockItems = [
 
 export function FloatingDock() {
 	const pathname = usePathname();
-	const [scrolled, setScrolled] = useState(false);
 	const { getTotalItems } = useCart();
 	const cartItemCount = getTotalItems();
 
-	useEffect(() => {
-		const handleScroll = () => {
-			setScrolled(window.scrollY > 8);
-		};
-
-		handleScroll();
-		window.addEventListener("scroll", handleScroll, { passive: true });
-		return () => window.removeEventListener("scroll", handleScroll);
-	}, []);
-
 	return (
 		<div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 md:left-6 md:top-1/2 md:-translate-y-1/2 md:translate-x-0">
-			<div
-				className={cn(
-					"flex items-center space-x-2 rounded-2xl border p-2 md:flex-col md:space-x-0 md:space-y-2 transition-all duration-300",
-					scrolled ? "bg-card/40 backdrop-blur-lg border-border/80 shadow-xl" : "bg-card/80 backdrop-blur-md border-border shadow-lg"
-				)}
-			>
+			<div className="flex items-center space-x-2 rounded-2xl border p-2 md:flex-col md:space-x-0 md:space-y-2 transition-all duration-300 bg-card/40 backdrop-blur-lg border-border/80 shadow-xl">
 				{dockItems.map((item) => {
 					const isActive = pathname === item.href;
 					const isCart = item.href === "/cart";

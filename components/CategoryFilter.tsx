@@ -2,7 +2,6 @@
 
 import { Category } from "@/types/product";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 interface CategoryFilterProps {
@@ -15,8 +14,8 @@ interface CategoryFilterProps {
 export function CategoryFilter({ categories, selectedCategory, onCategoryChange, className }: CategoryFilterProps) {
 	return (
 		<div className={cn("w-full", className)}>
-			<ScrollArea className="w-full">
-				<div className="flex gap-2 pb-2">
+			<div className="w-full overflow-x-auto scrollbar-hide">
+				<div className="flex gap-2 pb-2 min-w-max px-1">
 					<Button
 						variant={selectedCategory === "all" ? "default" : "outline"}
 						size="sm"
@@ -38,7 +37,7 @@ export function CategoryFilter({ categories, selectedCategory, onCategoryChange,
 						</Button>
 					))}
 				</div>
-			</ScrollArea>
+			</div>
 		</div>
 	);
 }
