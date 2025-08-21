@@ -45,8 +45,8 @@ export default function MyOrders({
 	const router = useRouter();
 	return (
 		<div className="space-y-4 lg:space-y-6">
-			<div className="flex flex-col lg:grid lg:grid-cols-3 gap-4 lg:gap-6">
-				<div className="order-2 lg:order-none lg:col-span-2 space-y-4">
+			<div className="flex flex-col lg:grid lg:grid-cols-3 gap-3 lg:gap-6">
+				<div className="order-2 lg:order-none lg:col-span-2 space-y-3 lg:space-y-4">
 					<Card className="gap-3">
 						<CardHeader className="px-4 overflow-x-hidden">
 							<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
