@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, Package, ShoppingCart, Settings } from "lucide-react";
+import { Home, Package, ShoppingCart, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -12,7 +12,7 @@ const dockItems = [
 	{ icon: Home, label: "Home", href: "/" },
 	{ icon: Package, label: "Products", href: "/products" },
 	{ icon: ShoppingCart, label: "Cart", href: "/cart" },
-	{ icon: Settings, label: "Settings", href: "/settings" },
+	{ icon: User, label: "Profile", href: "/profile" },
 ];
 
 export function FloatingDock() {
@@ -21,7 +21,7 @@ export function FloatingDock() {
 	const cartItemCount = getTotalItems();
 
 	return (
-		<div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 md:left-6 md:top-1/2 md:-translate-y-1/2 md:translate-x-0">
+		<div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 md:right-6 md:top-1/2 md:left-auto md:-translate-y-1/2">
 			<div className="flex items-center space-x-2 rounded-2xl border p-2 md:flex-col md:space-x-0 md:space-y-2 transition-all duration-300 bg-card/40 backdrop-blur-lg border-border/80 shadow-xl">
 				{dockItems.map((item) => {
 					const isActive = pathname === item.href;

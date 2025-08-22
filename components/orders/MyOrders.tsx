@@ -38,16 +38,9 @@ export default function MyOrders({
 	return (
 		<div className="space-y-6">
 			<div className="flex flex-col lg:grid lg:grid-cols-3 gap-6">
-				{/* Mobile Order 1: Distributor Profile (only on mobile) */}
-				{distributor && (
-					<div className="block lg:hidden order-1">
-						<DistributorProfile distributor={distributor} />
-					</div>
-				)}
-
-				{/* Mobile Order 2 & Desktop: Filters and Orders */}
-				<div className="order-2 lg:order-none lg:col-span-2 space-y-6">
-					{/* Mobile Order 2: Filter Card */}
+				{/* Mobile Order 1 & Desktop: Filters and Orders */}
+				<div className="order-1 lg:order-none lg:col-span-2 space-y-6">
+					{/* Mobile Order 1: Filter Card */}
 					<OrderFilters
 						selectedYear={selectedYear}
 						setSelectedYear={setSelectedYear}
@@ -59,7 +52,7 @@ export default function MyOrders({
 						uniqueMonthNames={uniqueMonthNames}
 					/>
 
-					{/* Mobile Order 3: Order List */}
+					{/* Mobile Order 2: Order List */}
 					<OrdersList orders={filteredOrders} isLoading={isLoading} />
 				</div>
 
@@ -71,8 +64,8 @@ export default function MyOrders({
 					</div>
 				)}
 
-				{/* Mobile Order 4: Description Card (only on mobile) */}
-				<div className="block lg:hidden order-4">
+				{/* Mobile Order 3: Description Card (only on mobile) */}
+				<div className="block lg:hidden order-3">
 					<DescriptionCard />
 				</div>
 			</div>
