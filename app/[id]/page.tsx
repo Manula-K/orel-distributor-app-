@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { LoadingButton } from "@/components/ui/loading-button";
 import { ChevronLeft, CheckCircle } from "lucide-react";
-import OrderDetailStep from "@/components/OrderDetails";
+import OrderDetailStep from "@/components/order-details/OrderDetails";
 import { ORDER_HISTORY } from "@/lib/mock-data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingOverlay } from "@/components/ui/loading-overlay";

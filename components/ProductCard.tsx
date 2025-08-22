@@ -1,10 +1,10 @@
 "use client";
 import { Product } from "@/types/product";
 import { useCart } from "@/contexts/CartContext";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Minus, Plus, ShoppingCart } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -20,31 +20,60 @@ export function ProductCard({ product, className }: ProductCardProps) {
 	const cartItem = items.find((item) => item.product.id === product.id);
 	const currentQuantity = cartItem?.quantity || 0;
 
-	const handleUpdateCartQuantity = (newQuantity: number) => {
-		if (newQuantity <= 0) {
-			updateQuantity(product.id, 0);
-			toast({
-				title: "Removed from cart",
-				description: `${product.name} removed from cart.`,
-			});
-		} else if (newQuantity > product.stock) {
-			toast({
-				title: "Insufficient stock",
-				description: `Only ${product.stock} ${product.unit} available in stock.`,
-				variant: "destructive",
-			});
-		} else {
+	// Helper functions
+	const showToast = (title: string, description: string, variant?: "default" | "destructive") => {
+		toast({ title, description, variant });
+	};
+
+	const handleQuantityChange = (newQuantity: number) => {
+		if (newQuantity < 0) return;
+
+		if (newQuantity > product.stock) {
+			showToast("Insufficient stock", `Only ${product.stock} ${product.unit} available in stock.`, "destructive");
+			return;
+		}
+
+		if (newQuantity === 0) {
+			if (cartItem) {
+				updateQuantity(product.id, 0);
+				showToast("Removed from cart", `${product.name} removed from cart.`);
+			}
+			return;
+		}
+
+		if (cartItem) {
 			updateQuantity(product.id, newQuantity);
-			toast({
-				title: "Cart updated",
-				description: `Quantity updated to ${newQuantity} ${product.unit}.`,
-			});
+			showToast("Cart updated", `Quantity updated to ${newQuantity} ${product.unit}.`);
+		} else {
+			addItem(product, newQuantity);
+			showToast("Added to cart", `${newQuantity} ${product.unit} of ${product.name} added to cart.`);
 		}
 	};
 
+	const handleDecreaseQuantity = () => {
+		if (!cartItem || currentQuantity <= 0) return;
+		handleQuantityChange(currentQuantity - 1);
+	};
+
+	const handleIncreaseQuantity = () => {
+		if (cartItem) {
+			handleQuantityChange(currentQuantity + 1);
+		} else if (product.stock > 0) {
+			handleQuantityChange(1);
+		}
+	};
+
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const newValue = parseInt(e.target.value) || 0;
+		handleQuantityChange(newValue);
+	};
+
+	const isDecreaseDisabled = !cartItem || currentQuantity <= 0;
+	const isIncreaseDisabled = cartItem ? currentQuantity >= product.stock : product.stock <= 0;
+
 	return (
 		<Card className={cn("group hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col h-full", className)}>
-			<CardHeader className="pb-1 flex-shrink-0">
+			<CardHeader className="flex-shrink-0">
 				<div className="relative overflow-hidden rounded-lg" style={{ aspectRatio: "4 / 4" }}>
 					<Image
 						src={product.image || "/placeholder-logo.png"}
@@ -57,9 +86,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
 			<CardContent className="px-3 flex-1 flex flex-col">
 				<div className="space-y-1.5 flex-1">
-					{/* Show SKU like title */}
 					<h3 className="font-semibold text-sm leading-tight line-clamp-1 group-hover:text-primary transition-colors">{product.sku}</h3>
-					{/* Show product name as muted sub description (two lines with ellipsis) */}
 					<p className="text-[10px] text-muted-foreground line-clamp-2 min-h-[1rem]">{product.name}</p>
 					<p className="text-sm font-bold text-primary">LKR {product.price.toLocaleString()}</p>
 				</div>
@@ -67,70 +94,20 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
 			<div className="w-full">
 				<div className="flex items-center justify-center gap-2">
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={() => {
-							if (!cartItem) return;
-							handleUpdateCartQuantity(currentQuantity - 1);
-						}}
-						disabled={!cartItem || currentQuantity <= 0}
-						className="h-8 w-8"
-					>
+					<Button variant="outline" size="sm" onClick={handleDecreaseQuantity} disabled={isDecreaseDisabled} className="h-8 w-8">
 						<Minus />
 					</Button>
+
 					<Input
 						type="number"
 						value={currentQuantity}
-						onChange={(e) => {
-							const newValue = parseInt(e.target.value) || 0;
-							if (newValue < 0) return;
-							if (newValue > product.stock) {
-								toast({
-									title: "Insufficient stock",
-									description: `Only ${product.stock} ${product.unit} available in stock.`,
-									variant: "destructive",
-								});
-								return;
-							}
-							if (newValue === 0) {
-								if (cartItem) {
-									updateQuantity(product.id, 0);
-								}
-								return;
-							}
-							if (cartItem) {
-								updateQuantity(product.id, newValue);
-							} else {
-								addItem(product, newValue);
-								toast({
-									title: "Added to cart",
-									description: `${newValue} ${product.unit} of ${product.name} added to cart.`,
-								});
-							}
-						}}
+						onChange={handleInputChange}
 						min="0"
 						max={product.stock}
 						className="h-10 w-18 text-center text-xs"
 					/>
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={() => {
-							if (cartItem) {
-								handleUpdateCartQuantity(currentQuantity + 1);
-							} else {
-								if (product.stock <= 0) return;
-								addItem(product, 1);
-								toast({
-									title: "Added to cart",
-									description: `1 ${product.unit} of ${product.name} added to cart.`,
-								});
-							}
-						}}
-						disabled={cartItem ? currentQuantity >= product.stock : product.stock <= 0}
-						className="h-8 w-8"
-					>
+
+					<Button variant="outline" size="sm" onClick={handleIncreaseQuantity} disabled={isIncreaseDisabled} className="h-8 w-8">
 						<Plus />
 					</Button>
 				</div>
