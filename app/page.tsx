@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import MyOrders from "@/components/MyOrders";
+import MyOrders from "@/components/orders/MyOrders";
 import TopBar from "@/components/TopBar";
 import { ORDER_HISTORY, MOCK_DISTRIBUTOR } from "@/lib/mock-data";
 import type { DistributorProfile, InvoiceData } from "@/types/invoice";
